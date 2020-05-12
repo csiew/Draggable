@@ -1,0 +1,157 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background: darkcyan;
+    overflow: hidden;
+    user-select: none;
+}
+
+#container {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 8px;
+    color: black;
+    background-color: #d3d3d3;
+    border: 2px solid #f1f1f1;
+    border-right: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+    font-family: inherit;
+    font-size: inherit;
+}
+button:active {
+    border: 2px solid #c0c0c0;
+    border-right: 2px solid #f1f1f1;
+    border-bottom: 2px solid #f1f1f1;
+}
+button:focus {
+    outline: none;
+}
+
+.taskbar {
+    display: flex;
+    flex-flow: row;
+    align-content: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+    color: black;
+    background-color: #d3d3d3;
+    border: 2px solid #f1f1f1;
+    border-right: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+    font-family: inherit;
+    font-size: inherit;
+}
+.taskbarTasklist {
+    justify-self: stretch;
+    width: 100%;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+.taskbarTasklist ul {
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.taskbarTasklist li {
+    display: inline-block;
+}
+
+.taskman ul {
+    display: flex;
+    flex-flow: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.taskman li {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+}
+
+.dragWindow {
+    position: absolute;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    z-index: 9;
+    min-width: 180px;
+    min-height: 120px;
+    box-sizing: border-box;
+    color: black;
+    background-color: #d3d3d3;
+    border: 2px solid #f1f1f1;
+    border-right: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+.dragWindowHeader {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    justify-self: flex-start;
+    margin: 2px;
+    padding: 4px;
+    box-sizing: border-box;
+    cursor: move;
+    z-index: 10;
+    color: white;
+    background-color: navy;
+    font-weight: bold;
+}
+
+.dragWindowHeaderTitle {
+    align-self: center;
+}
+.dragWindowControls {
+    display: flex;
+    flex-flow: row;
+}
+.dragWindowControls button {
+    padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    line-height: 1;
+}
+
+.dragWindowContent {
+    justify-self: stretch;
+    margin: 2px;
+    margin-top: 0;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.dragWindowResizer {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    margin-left: auto;
+    margin-top: auto;
+    cursor: nwse-resize;
+    background-color: #d3d3d3;
+    border: 2px solid #c0c0c0;
+    border-right: 2px solid #f1f1f1;
+    border-bottom: 2px solid #f1f1f1;
+}
+.dragWindowResizer:active {
+    background-color: #a3a3a3;
+}

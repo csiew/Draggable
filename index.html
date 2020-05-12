@@ -1,0 +1,19 @@
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width initial-scale=1'>
+	<link id="pagestyle" href="style.css" rel="stylesheet" type="text/css" />
+	<!-- <link rel="shortcut icon" href="images/profile.jpg"> -->
+    <title>Draggable</title>
+</head>
+<body>
+    <div id='container'>
+        <div id='taskbar' class='taskbar'>
+            <button onclick='currentSession.taskman()'>TaskMan</button>
+            <button onclick='pool.poolman()'>PoolMan</button>
+            <button onclick='currentSession.createWindow()'>New</button>
+            <div id='taskbarTasklist' class='taskbarTasklist'></div>
+            <button onclick='currentSession.purge()'>Purge</button>
+        </div>
+    </div>
+    <script type="application/javascript" src="wm.js"></script>
+</body>
