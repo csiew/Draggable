@@ -15,11 +15,10 @@ function uuidv4() {
 
 class wmWindow {
     constructor(title, body, allowResizable=true, customId=null) {
-        this.id = 'a' + uuidv4();;
+        this.id = customId ? customId : 'a' + uuidv4();
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
-        this.customId = customId;
     }
 
     getId() {
@@ -291,12 +290,7 @@ class TaskManager {
         if (!document.getElementById("taskman")) {
             var allTasks = "<div class='taskman'><ul id='taskman-entries'>"
             for (const [key, value] of currentSession.windowReg) {
-                allTasks += `
-                    <li id="taskman-item-${key}">
-                        <div>${value.title}</div>
-                        <button onclick="currentSession.destroyWindow('${key}')">Kill</button>
-                    </li>
-                `;
+                allTasks += this.createEntry(key, value.title);
             }
             allTasks += "</ul></div>"
             var taskman = new wmWindow("Task Manager", allTasks, false, "taskman");
@@ -304,15 +298,18 @@ class TaskManager {
         }
     }
 
+    createEntry(key, title) {
+        return `
+            <li id="taskman-item-${key}">
+                <div>${title}</div>
+                <button onclick="currentSession.destroyWindow('${key}')">Kill</button>
+            </li>
+        `;
+    }
+
     add(key, title) {
-        if (document.getElementById("taskman")) {
-            const newEntry = `
-                <li id="taskman-item-${key}">
-                    <div>${title}</div>
-                    <button onclick="currentSession.destroyWindow('${key}')">Kill</button>
-                </li>
-            `;
-            document.getElementById("taskman-entries").innerHTML += newEntry;
+        if (document.getElementById("taskman") && key !== "taskman") {
+            document.getElementById("taskman-entries").innerHTML += this.createEntry(key, title);
         }
     }
 }
