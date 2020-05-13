@@ -149,12 +149,6 @@ class wmSession {
         this.windowReg.delete(windowId);
     }
 
-    purge() {
-        for (const key of this.windowReg.keys()) {
-            this.destroyWindow(key);
-        }
-    }
-
     hideWindow(windowId) {
         var windowMain = document.getElementById(windowId);
         var tasklistItem = document.getElementById(`tasklist-${windowId}`);
@@ -358,11 +352,15 @@ class wmSession {
 class TaskManager {
     run() {
         if (!document.getElementById("taskman")) {
-            var allTasks = "<div class='taskman'><ul id='taskman-entries'>"
+            var allTasks = `
+                <div class='taskman'>
+                    <ul id='taskman-entries'>
+                        <button onclick="taskmgr.purge()">Purge</button>
+            `
             for (const [key, value] of currentSession.windowReg) {
                 allTasks += this.createEntry(key, value.title);
             }
-            allTasks += "</ul></div>"
+            allTasks += `</ul></div>`
             var taskman = new wmWindow("Task Manager", allTasks, false, "taskman");
             currentSession.createWindow(taskman);
         }
@@ -380,6 +378,14 @@ class TaskManager {
     add(key, title) {
         if (document.getElementById("taskman") && key !== "taskman") {
             document.getElementById("taskman-entries").innerHTML += this.createEntry(key, title);
+        }
+    }
+
+    purge() {
+        for (const key of currentSession.windowReg.keys()) {
+            if (key !== "taskman") {
+                currentSession.destroyWindow(key);
+            }
         }
     }
 }
