@@ -72,7 +72,9 @@ class wmSession {
                     <div class="dragWindowHeaderTitle">
                         ${newWindow.title}
                     </div>
-                    <div class="dragWindowControls"></div>
+                    <div class="dragWindowControls">
+                        <button onmouseup="currentSession.hideWindow('${newWindow.id}')">&minus;</button>
+                    </div>
                 </div>
                 <div
                     id="${newWindow.id}-content"
@@ -94,14 +96,26 @@ class wmSession {
         }
 
         document.getElementById('container').innerHTML += windowGen;
+
+        const windowMain = document.getElementById(`${newWindow.id}`);
+
+        // Show window
+        windowMain.style.visibility = 'visible';
+        windowMain.style.display = 'flex';
     }
 
     renderTasklistItem(newWindow) {
         document.getElementById('taskbarTasklist').innerHTML += `
-            <li id="tasklist-${newWindow.id}">
-                <button onclick="currentSession.hideWindow(${newWindow.id})">${newWindow.title}</button>
-            </li>
+            <button id="tasklist-${newWindow.id}" onclick="currentSession.hideWindow('${newWindow.id}')">${newWindow.title}</button>
         `;
+
+        const tasklistItem = document.getElementById(`tasklist-${newWindow.id}`);
+
+        // Engraved tasklist button
+        tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
+        tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
     }
 
     destroyWindow(windowId) {
@@ -265,10 +279,12 @@ class wmSession {
         this.dragWindow(document.getElementById(windowId));
         this.resizeWindow(document.getElementById(windowId));
     }
+}
 
-    taskman() {
+class TaskManager {
+    run() {
         var allTasks = "<div class='taskman'><ul>"
-        for (const [key, value] of this.windowReg) {
+        for (const [key, value] of currentSession.windowReg) {
             allTasks += `
                 <li>
                     <div>${value.title}</div>
@@ -278,7 +294,7 @@ class wmSession {
         }
         allTasks += "</ul></div>"
         var taskman = new wmWindow("Task Manager", allTasks, false);
-        this.createWindow(taskman);
+        currentSession.createWindow(taskman);
     }
 }
 
@@ -395,7 +411,14 @@ class Preferences {
     }
 }
 
+class SessionManager {
+    constructor() {
+        this.windowReg = new Map();
+    }
+}
+
 currentSession = new wmSession();
+taskmgr = new TaskManager();
 pool = new PoolManager();
 prefs = new Preferences();
 pool.batchAdd([

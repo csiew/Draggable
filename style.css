@@ -51,21 +51,17 @@ button:focus {
     font-size: inherit;
 }
 .taskbarTasklist {
+    display: flex;
+    flex-flow: row wrap;
     justify-self: stretch;
     width: 100%;
     margin-left: 16px;
     margin-right: 16px;
 }
-.taskbarTasklist ul {
-    display: flex;
-    flex-flow: row wrap;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.taskbarTasklist li {
-    display: inline-block;
-    margin: 0;
+.taskbarTasklist button {
+    border: 2px solid #c0c0c0;
+    border-right: 2px solid #f1f1f1;
+    border-bottom: 2px solid #f1f1f1;
 }
 
 .taskman ul {
