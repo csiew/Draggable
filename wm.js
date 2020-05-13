@@ -4,7 +4,7 @@ const LEVEL_UNFOCUSED = 5;
 const DARK_BORDER_COLOR = "#c0c0c0";
 const LIGHT_BORDER_COLOR = "#f1f1f1";
 
-var currentSession;
+var currentSession, taskmgr, pool, prefs;
 
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -14,11 +14,12 @@ function uuidv4() {
 }
 
 class wmWindow {
-    constructor(title, body, allowResizable=true) {
+    constructor(title, body, allowResizable=true, customId=null) {
         this.id = 'a' + uuidv4();;
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
+        this.customId = customId;
     }
 
     getId() {
@@ -52,6 +53,7 @@ class wmSession {
                 this.moveWindow(key);
             }
         });
+        this.raiseWindow(newWindow.id);
     }
 
     renderWindow(newWindow) {
@@ -59,7 +61,7 @@ class wmSession {
             <div
                 id="${newWindow.id}"
                 class="dragWindow"
-                onmouseover="currentSession.raiseWindow(${newWindow.id})"
+                onclick="currentSession.raiseWindow('${newWindow.id}')"
             >
                 <div
                     id="${newWindow.id}-header"
@@ -116,11 +118,16 @@ class wmSession {
         tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
         tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
         tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+
+        taskmgr.add(newWindow.id, newWindow.title);
     }
 
     destroyWindow(windowId) {
         document.getElementById(windowId).remove();
         document.getElementById(`tasklist-${windowId}`).remove();
+        if (document.getElementById(`taskman-item-${windowId}`)) {
+            document.getElementById(`taskman-item-${windowId}`).remove();
+        }
         this.windowReg.delete(windowId);
     }
 
@@ -155,27 +162,24 @@ class wmSession {
         }
     }
 
-    raiseWindow(elmnt) {
-        console.log(`Attempting to raise window: ${elmnt.id}`);
+    raiseWindow(windowId) {
+        console.log(`Attempting to raise window: ${windowId}`);
         var allKeys = this.windowReg.keys();
 
-        if (document.getElementById(elmnt.id + "-header")) {
+        if (document.getElementById(windowId)) {
             // if present, the header is where you move the DIV from:
-            document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
-        } else {
-            // otherwise, move the DIV from anywhere inside the DIV:
-            elmnt.id.onmousedown = focusEvent;
+            document.getElementById(windowId).onmousedown = focusEvent;
         }
     
         function focusEvent(e) {
             e = e || window.event;
             e.preventDefault();
             document.onmouseup = closeFocusEvent;
-            document.getElementById(elmnt.id).style.outline = '1px solid red';
+            document.getElementById(windowId).style.outline = '1px solid red';
             // update z-index
             for (const key of allKeys) {
-                if (elmnt.id === key) {
-                    document.getElementById(elmnt.id).style.zIndex = LEVEL_FOCUSED;
+                if (windowId === key) {
+                    document.getElementById(windowId).style.zIndex = LEVEL_FOCUSED;
                 } else {
                     document.getElementById(key).style.zIndex = LEVEL_UNFOCUSED;
                 }
@@ -183,7 +187,7 @@ class wmSession {
         }
     
         function closeFocusEvent() {
-            document.getElementById(elmnt).style.outline = 'none';
+            document.getElementById(windowId).style.outline = 'none';
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;
@@ -199,6 +203,7 @@ class wmSession {
             // otherwise, move the DIV from anywhere inside the DIV:
             elmnt.onmousedown = dragMouseDown;
         }
+        this.raiseWindow(elmnt.id);
     
         function dragMouseDown(e) {
             e = e || window.event;
@@ -283,18 +288,32 @@ class wmSession {
 
 class TaskManager {
     run() {
-        var allTasks = "<div class='taskman'><ul>"
-        for (const [key, value] of currentSession.windowReg) {
-            allTasks += `
-                <li>
-                    <div>${value.title}</div>
+        if (!document.getElementById("taskman")) {
+            var allTasks = "<div class='taskman'><ul id='taskman-entries'>"
+            for (const [key, value] of currentSession.windowReg) {
+                allTasks += `
+                    <li id="taskman-item-${key}">
+                        <div>${value.title}</div>
+                        <button onclick="currentSession.destroyWindow('${key}')">Kill</button>
+                    </li>
+                `;
+            }
+            allTasks += "</ul></div>"
+            var taskman = new wmWindow("Task Manager", allTasks, false, "taskman");
+            currentSession.createWindow(taskman);
+        }
+    }
+
+    add(key, title) {
+        if (document.getElementById("taskman")) {
+            const newEntry = `
+                <li id="taskman-item-${key}">
+                    <div>${title}</div>
                     <button onclick="currentSession.destroyWindow('${key}')">Kill</button>
                 </li>
-            `
+            `;
+            document.getElementById("taskman-entries").innerHTML += newEntry;
         }
-        allTasks += "</ul></div>"
-        var taskman = new wmWindow("Task Manager", allTasks, false);
-        currentSession.createWindow(taskman);
     }
 }
 
