@@ -7,6 +7,9 @@ const DEFAULT_HEIGHT = '120px';
 const DARK_BORDER_COLOR = "#c0c0c0";
 const LIGHT_BORDER_COLOR = "#f1f1f1";
 
+const WINDOW_HEADER_BG_COLOR_FOCUSED = "#800020";
+const WINDOW_HEADER_BG_COLOR_UNFOCUSED = "#A07983";
+
 var currentSession, taskmgr, pool, prefs;
 
 function uuidv4() {
@@ -63,17 +66,27 @@ class wmSession {
             this.renderTasklistItem(newWindow);
             taskmgr.add(newWindow.id, newWindow.title);
         };
+        let updateSession = async () => {
+            var allKeys = this.windowReg.keys();
+    
+            // Make all windows draggable
+            for (const key of allKeys) {
+                this.moveWindow(key);
+            }
+
+            // Use auto dimensions as default dimensions
+            var windowInfo = this.windowReg.get(newWindow.id);
+            windowInfo.width = document.getElementById(newWindow.id).getBoundingClientRect().width;
+            windowInfo.width = document.getElementById(newWindow.id).getBoundingClientRect().height;
+            this.windowReg.set(newWindow.id, windowInfo);
+        }
         addWindowToRegistry().then(() => {
             addWindowToSession().then(() => {
-                var allKeys = this.windowReg.keys();
-        
-                // Make all windows draggable
-                for (const key of allKeys) {
-                    this.moveWindow(key);
-                }
+                updateSession().then(() => {
+                    this.raiseWindow(newWindow.id);
+                });
             });
         });
-        this.raiseWindow(newWindow.id);
     }
 
     renderWindow(newWindow) {
@@ -229,32 +242,46 @@ class wmSession {
         for (const key of allKeys) {
             if (windowId === key) {
                 // focus a window
-                const windowMain = document.getElementById(windowId);
-                const tasklistItem = document.getElementById(`tasklist-${windowId}`);
-
-                // Raise window
-                windowMain.style.zIndex = LEVEL_FOCUSED;
-        
-                // Show window
-                windowMain.style.visibility = 'visible';
-                windowMain.style.display = 'flex';
-        
-                // Engraved tasklist button
-                tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
-                tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
-                tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
-                tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+                this.styleWindowFocus(windowId);
             } else {
                 // unfocus a window
-                document.getElementById(key).style.zIndex = LEVEL_UNFOCUSED;
-
-                // Embossed tasklist button
-                document.getElementById(`tasklist-${key}`).style.borderBottomColor = DARK_BORDER_COLOR;
-                document.getElementById(`tasklist-${key}`).style.borderRightColor = DARK_BORDER_COLOR;
-                document.getElementById(`tasklist-${key}`).style.borderTopColor = LIGHT_BORDER_COLOR;
-                document.getElementById(`tasklist-${key}`).style.borderLeftColor = LIGHT_BORDER_COLOR;
+                this.styleWindowUnfocus(key);
             }
         }
+    }
+
+    styleWindowFocus(windowId) {
+        const windowMain = document.getElementById(windowId);
+        const tasklistItem = document.getElementById(`tasklist-${windowId}`);
+
+        // Raise window and focus
+        windowMain.style.zIndex = LEVEL_FOCUSED;
+        document.getElementById(windowId + '-header').style.background = WINDOW_HEADER_BG_COLOR_FOCUSED;
+
+        // Show window
+        windowMain.style.visibility = 'visible';
+        windowMain.style.display = 'flex';
+
+        // Engraved tasklist button
+        tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
+        tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+    }
+
+    styleWindowUnfocus(windowId) {
+        const windowMain = document.getElementById(windowId);
+        const tasklistItem = document.getElementById(`tasklist-${windowId}`);
+
+        // Lower window and unfocus
+        windowMain.style.zIndex = LEVEL_UNFOCUSED;
+        document.getElementById(windowId + '-header').style.background = WINDOW_HEADER_BG_COLOR_UNFOCUSED;
+
+        // Embossed tasklist button
+        tasklistItem.style.borderBottomColor = DARK_BORDER_COLOR;
+        tasklistItem.style.borderRightColor = DARK_BORDER_COLOR;
+        tasklistItem.style.borderTopColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderLeftColor = LIGHT_BORDER_COLOR;
     }
 
     dragWindow(elmnt) {
