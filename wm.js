@@ -25,6 +25,7 @@ class wmWindow {
         body,
         allowResizable=true,
         customId=null,
+        focused=true,
         hidden=false,
         zoomed=false,
         customWidth=0,
@@ -34,6 +35,7 @@ class wmWindow {
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
+        this.focused = focused ? true : false;
         this.zoomed = zoomed ? true : false;
         this.hidden = hidden ? true : false;
         this.width = (customWidth && customWidth < DEFAULT_WIDTH) ? DEFAULT_WIDTH : customWidth;
@@ -146,10 +148,11 @@ class wmSession {
     }
 
     toggleTasklistItem(windowId) {
-        console.log(`Clicked on tasklist item for: ${windowId}`);
-        this.raiseWindowHelper(windowId);
-        if (this.windowReg.get(windowId).hidden) {
+        const thisWindow = this.windowReg.get(windowId);
+        if (thisWindow.hidden === false && thisWindow.focused === true) {
             this.hideWindow(windowId);
+        } else {
+            this.raiseWindowHelper(windowId);
         }
     }
 
@@ -175,6 +178,10 @@ class wmSession {
             tasklistItem.style.borderRightColor = DARK_BORDER_COLOR;
             tasklistItem.style.borderTopColor = LIGHT_BORDER_COLOR;
             tasklistItem.style.borderLeftColor = LIGHT_BORDER_COLOR;
+            // Update registry
+            var windowEntry = this.windowReg.get(windowId);
+            windowEntry.hidden = true;
+            this.windowReg.set(windowId, windowEntry);
         } else {
             // Show window
             windowMain.style.visibility = 'visible';
@@ -184,6 +191,10 @@ class wmSession {
             tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
             tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
             tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+            // Update registry
+            var windowEntry = this.windowReg.get(windowId);
+            windowEntry.hidden = false;
+            this.windowReg.set(windowId, windowEntry);
         }
     }
 
@@ -267,6 +278,11 @@ class wmSession {
         tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
         tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
         tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+
+        // Update registry
+        var windowEntry = this.windowReg.get(windowId);
+        windowEntry.focused = true;
+        this.windowReg.set(windowId, windowEntry);
     }
 
     styleWindowUnfocus(windowId) {
@@ -282,6 +298,11 @@ class wmSession {
         tasklistItem.style.borderRightColor = DARK_BORDER_COLOR;
         tasklistItem.style.borderTopColor = LIGHT_BORDER_COLOR;
         tasklistItem.style.borderLeftColor = LIGHT_BORDER_COLOR;
+
+        // Update registry
+        var windowEntry = this.windowReg.get(windowId);
+        windowEntry.focused = false;
+        this.windowReg.set(windowId, windowEntry);
     }
 
     dragWindow(elmnt) {
