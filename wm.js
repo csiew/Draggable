@@ -1,6 +1,9 @@
 const LEVEL_FOCUSED = 100;
 const LEVEL_UNFOCUSED = 5;
 
+const DEFAULT_WIDTH = '180px';
+const DEFAULT_HEIGHT = '120px';
+
 const DARK_BORDER_COLOR = "#c0c0c0";
 const LIGHT_BORDER_COLOR = "#f1f1f1";
 
@@ -14,11 +17,24 @@ function uuidv4() {
 }
 
 class wmWindow {
-    constructor(title, body, allowResizable=true, customId=null) {
+    constructor(
+        title,
+        body,
+        allowResizable=true,
+        customId=null,
+        hidden=false,
+        zoomed=false,
+        customWidth=0,
+        customHeight=0
+    ) {
         this.id = customId ? customId : 'a' + uuidv4();
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
+        this.zoomed = zoomed ? true : false;
+        this.hidden = hidden ? true : false;
+        this.width = (customWidth && customWidth < DEFAULT_WIDTH) ? DEFAULT_WIDTH : customWidth;
+        this.height = (customHeight && customHeight < DEFAULT_HEIGHT) ? DEFAULT_HEIGHT : customHeight;
     }
 
     getId() {
@@ -39,18 +55,23 @@ class wmSession {
         } else {
             newWindow = customWindow;
         }
+        let addWindowToRegistry = async () => {
+            this.windowReg.set(newWindow.id, newWindow);
+        }
         let addWindowToSession = async () => {
             this.renderWindow(newWindow);
             this.renderTasklistItem(newWindow);
+            taskmgr.add(newWindow.id, newWindow.title);
         };
-        addWindowToSession().then(() => {
-            this.windowReg.set(newWindow.id, newWindow);
-            var allKeys = this.windowReg.keys();
-    
-            // Make all windows draggable
-            for (const key of allKeys) {
-                this.moveWindow(key);
-            }
+        addWindowToRegistry().then(() => {
+            addWindowToSession().then(() => {
+                var allKeys = this.windowReg.keys();
+        
+                // Make all windows draggable
+                for (const key of allKeys) {
+                    this.moveWindow(key);
+                }
+            });
         });
         this.raiseWindow(newWindow.id);
     }
@@ -74,6 +95,12 @@ class wmSession {
                         ${newWindow.title}
                     </div>
                     <div class="dragWindowControls">
+                    ` + (
+                        newWindow.allowResizable === true ?
+                        `<button onmouseup="currentSession.zoomWindow('${newWindow.id}')">&plus;</button>` :
+                        ''
+                    ) +
+                    ` 
                         <button onmouseup="currentSession.hideWindow('${newWindow.id}')">&minus;</button>
                     </div>
                 </div>
@@ -97,28 +124,20 @@ class wmSession {
         }
 
         document.getElementById('container').innerHTML += windowGen;
-
-        const windowMain = document.getElementById(`${newWindow.id}`);
-
-        // Show window
-        windowMain.style.visibility = 'visible';
-        windowMain.style.display = 'flex';
     }
 
     renderTasklistItem(newWindow) {
         document.getElementById('taskbarTasklist').innerHTML += `
-            <button id="tasklist-${newWindow.id}" onclick="currentSession.hideWindow('${newWindow.id}')">${newWindow.title}</button>
+            <button id="tasklist-${newWindow.id}" onclick="currentSession.toggleTasklistItem('${newWindow.id}')">${newWindow.title}</button>
         `;
+    }
 
-        const tasklistItem = document.getElementById(`tasklist-${newWindow.id}`);
-
-        // Engraved tasklist button
-        tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
-        tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
-        tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
-        tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
-
-        taskmgr.add(newWindow.id, newWindow.title);
+    toggleTasklistItem(windowId) {
+        console.log(`Clicked on tasklist item for: ${windowId}`);
+        this.raiseWindowHelper(windowId);
+        if (this.windowReg.get(windowId).hidden) {
+            this.hideWindow(windowId);
+        }
     }
 
     destroyWindow(windowId) {
@@ -161,9 +180,31 @@ class wmSession {
         }
     }
 
+    zoomWindow(windowId) {
+        if (this.windowReg.has(windowId) && this.windowReg.get(windowId).allowResizable) {
+            var windowMain = document.getElementById(windowId);
+            
+            if (this.windowReg.zoomed) {
+                // restore to default dimensions
+                windowMain.style.width = this.windowReg.get(windowId).width;
+                windowMain.style.height = this.windowReg.get(windowId).height;
+                this.windowReg.zoomed = false;
+            } else {
+                // fill screen (except taskbar)
+                const taskbarHeight = document.getElementById('taskbar').getBoundingClientRect().height;
+                windowMain.style.top = taskbarHeight + 'px';
+                windowMain.style.left = '0px';
+                windowMain.style.width = window.innerWidth;
+                windowMain.style.height = window.innerHeight - taskbarHeight;
+                this.windowReg.zoomed = true;
+            }
+        }
+    }
+
     raiseWindow(windowId) {
-        console.log(`Attempting to raise window: ${windowId}`);
-        var allKeys = this.windowReg.keys();
+        const helper = async () => {
+            this.raiseWindowHelper(windowId);
+        }
 
         if (document.getElementById(windowId)) {
             // if present, the header is where you move the DIV from:
@@ -175,21 +216,50 @@ class wmSession {
             e.preventDefault();
             document.onmouseup = closeFocusEvent;
             document.getElementById(windowId).style.outline = '1px solid red';
-            // update z-index
-            for (const key of allKeys) {
-                if (windowId === key) {
-                    document.getElementById(windowId).style.zIndex = LEVEL_FOCUSED;
-                } else {
-                    document.getElementById(key).style.zIndex = LEVEL_UNFOCUSED;
-                }
-            }
+            helper();
         }
     
         function closeFocusEvent() {
-            document.getElementById(windowId).style.outline = 'none';
+            if (document.getElementById(windowId)) {
+                document.getElementById(windowId).style.outline = 'none';
+            }
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;
+        }
+    }
+
+    raiseWindowHelper(windowId) {
+        var allKeys = this.windowReg.keys();
+        // update z-index
+        for (const key of allKeys) {
+            if (windowId === key) {
+                // focus a window
+                const windowMain = document.getElementById(windowId);
+                const tasklistItem = document.getElementById(`tasklist-${windowId}`);
+
+                // Raise window
+                windowMain.style.zIndex = LEVEL_FOCUSED;
+        
+                // Show window
+                windowMain.style.visibility = 'visible';
+                windowMain.style.display = 'flex';
+        
+                // Engraved tasklist button
+                tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
+                tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
+                tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
+                tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+            } else {
+                // unfocus a window
+                document.getElementById(key).style.zIndex = LEVEL_UNFOCUSED;
+
+                // Embossed tasklist button
+                document.getElementById(`tasklist-${key}`).style.borderBottomColor = DARK_BORDER_COLOR;
+                document.getElementById(`tasklist-${key}`).style.borderRightColor = DARK_BORDER_COLOR;
+                document.getElementById(`tasklist-${key}`).style.borderTopColor = LIGHT_BORDER_COLOR;
+                document.getElementById(`tasklist-${key}`).style.borderLeftColor = LIGHT_BORDER_COLOR;
+            }
         }
     }
 
