@@ -4,7 +4,7 @@ html, body {
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
-    background: darkcyan;
+    background: tomato;
     overflow: hidden;
     user-select: none;
 }
@@ -65,6 +65,7 @@ button:focus {
 }
 .taskbarTasklist li {
     display: inline-block;
+    margin: 0;
 }
 
 .taskman ul {
@@ -77,6 +78,7 @@ button:focus {
 .taskman li {
     display: flex;
     flex-flow: row;
+    align-items: center;
     justify-content: space-between;
     margin: 0;
     padding: 0;
@@ -110,7 +112,7 @@ button:focus {
     cursor: move;
     z-index: 10;
     color: white;
-    background-color: navy;
+    background-color: #800020;
     font-weight: bold;
 }
 
