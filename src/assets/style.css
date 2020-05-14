@@ -4,7 +4,7 @@ html, body {
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
-    background: tomato;
+    background: darkcyan;
     overflow: hidden;
     user-select: none;
 }
