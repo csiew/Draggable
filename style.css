@@ -112,12 +112,14 @@ button:focus {
     padding: 0;
 }
 .menuList li {
+    margin: 0;
+    padding: 4px;
     color: black;
     background-color: #d3d3d3;
 }
 .menuList li:hover {
     color: white;
-    background-color: black;
+    background-color: #800020;
 }
 
 .dragWindow {
@@ -144,7 +146,7 @@ button:focus {
     flex-flow: row;
     justify-content: space-between;
     justify-self: flex-start;
-    margin: 2px;
+    margin: 0;
     padding: 4px;
     box-sizing: border-box;
     cursor: move;

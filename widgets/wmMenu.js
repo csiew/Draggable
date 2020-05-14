@@ -1,9 +1,10 @@
 class wmMenu {
-    constructor(customId=null, parentId=null, appId=null) {
-        this.id = customId ? uuidv4() : customId;
+    constructor(customId=null, parentId=null, appId=null, hidden=true) {
+        this.id = customId ? customId : 'a' + uuidv4();
         this.parentId = parentId ? uuidv4() : parentId;
         this.appId = appId ? null : appId;
         this.menuItems = new Object();
+        this.hidden = hidden;
     }
 
     addItem(menuItem) {
@@ -21,7 +22,7 @@ class wmMenu {
     renderItem(item) {
         if (item instanceof wmMenuItem) {
             return `
-                <li id="menuitem-${item.id}" onclick="menu">${item.title}</li>
+                <li id="menuitem-${item.id}" onclick="${item.action}">${item.title}</li>
             `;
         }
     }
@@ -34,8 +35,8 @@ class wmMenu {
             >
                 <ul>
         `;
-        for (const [key, value] of this.menuItems) {
-            menu += this.createEntry(key, value.title);
+        for (const [key, value] of Object.entries(this.menuItems)) {
+            menu += this.renderItem(value);
         }
         menu += `</ul></div>`;
 

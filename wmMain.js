@@ -25,7 +25,9 @@ class wmElements {
     }
 
     static destroy(id) {
-        document.getElementById(id).remove();
+        if (document.getElementById(id)) {
+            document.getElementById(id).remove();
+        }
     }
 
     static bounds(id) {
@@ -43,11 +45,13 @@ class wmSession {
         this.windowReg = new Map();
         this.menuReg = new Map();
         this.taskbar = new wmTaskbar();
+        this.launcher = new Launcher();
     }
 
     init() {
         wmElements.draw('container', this.taskbar.render());
         this.taskbar.addLeftItems([
+            new wmTaskbarItem(null, "Launcher", "currentSession.launcherHelper()"),
             new wmTaskbarItem(null, "TaskMan", "taskmgr.run()"),
             new wmTaskbarItem(null, "PoolMan", "pool.poolman()"),
             new wmTaskbarItem(null, "New", "currentSession.createWindow()"),
@@ -55,7 +59,15 @@ class wmSession {
         this.taskbar.addRightItems([
             new wmTaskbarItem(null, "Backgrounds", "prefs.setBackgroundWindow()"),
         ]);
+
+        this.createMenu(this.launcher);
+        // wmElements.draw('container', this.launcher.render());
+
         this.resizeEventListener();
+    }
+
+    launcherHelper() {
+        this.hideMenu(this.launcher.id);
     }
 
     resizeEventListener() {
@@ -113,29 +125,15 @@ class wmSession {
         });
     }
 
-    createMenu(newMenu, e) {
+    createMenu(newMenu) {
         if (newMenu instanceof wmMenu) {
-            e = e || window.event;
-            e.preventDefault();
-            xCursor = e.clientX;
-            yCursor = e.clientY;
-
             let addMenuToRegistry = async () => {
                 this.menuReg.set(newMenu.id, newMenu);
             }
-            let addMenuToSession = async () => {
-                wmElements.draw('container', newMenu.render());
-                wmElements.get(newMenu.id).style.visibility = 'visible';
-                wmElements.get(newMenu.id).style.display = 'flex';
-                wmElements.get(newMenu.id).style.top = yCursor;
-                wmElements.get(newMenu.id).style.left = xCursor;
-            };
             addMenuToRegistry().then(() => {
-                addMenuToSession().then(() => {
-                    // Hide menu on mouse out
-                    wmElements.get(newMenu.id).onmouseout = this.hideMenu(newMenuId);
-                    wmElements.get(newMenu.id).onmousedown = this.hideMenu(newMenuId);
-                });
+                wmElements.draw('container', newMenu.render());
+                wmElements.get(newMenu.id).style.visibility = 'collapse';
+                wmElements.get(newMenu.id).style.display = 'none';
             });
         }
     }
@@ -205,15 +203,36 @@ class wmSession {
             // Update registry
             var menuEntry = this.menuReg.get(menuId);
             menuEntry.hidden = true;
-            this.menuEntry.set(menuId, menuEntry);
+            this.menuReg.set(menuId, menuEntry);
         } else {
+            // Position menu under pointer
+            menu.style.top = window.event.clientX;
+            menu.style.left = window.event.clientY;
             // Show menu
             menu.style.visibility = 'visible';
             menu.style.display = 'flex';
             // Update registry
             var menuEntry = this.menuReg.get(menuId);
             menuEntry.hidden = false;
-            this.menuEntry.set(menuId, menuEntry);
+            this.menuReg.set(menuId, menuEntry);
+            // Hide menu on mouse out and onclick
+            wmElements.get(menuId).onmousedown = pointerObserver;
+
+            const callHideMenu = () => {
+                this.hideMenu(menuId)
+            }
+
+            function pointerObserver(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // call a function whenever the cursor moves:
+                document.onmouseup = closeMenu;
+            }
+        
+            function closeMenu() {
+                document.onmousedown = null;
+                callHideMenu();
+            }
         }
     }
 

@@ -7,7 +7,7 @@ class Preferences {
         this.backgrounds['img'] = new Object();
 
         var colors = {
-            'Tomato': 'tomato',
+            'Dark Slate Blue': 'darkslateblue',
             'Dark Cyan': 'darkcyan',
             'Steel Blue': 'steelblue'
         };
