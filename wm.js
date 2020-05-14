@@ -19,6 +19,16 @@ function uuidv4() {
     });
 }
 
+class wmDraw {
+    static draw(id, content) {
+        document.getElementById(id).innerHTML += content;
+    }
+
+    static destroy(id) {
+        document.getElementById(id).remove();
+    }
+}
+
 class wmWindow {
     constructor(
         title,
@@ -42,8 +52,182 @@ class wmWindow {
         this.height = (customHeight && customHeight < DEFAULT_HEIGHT) ? DEFAULT_HEIGHT : customHeight;
     }
 
-    getId() {
-        return `${this.id}`;
+    render() {
+        var windowGen = `
+            <div
+                id="${this.id}"
+                class="dragWindow"
+                onclick="currentSession.raiseWindow('${this.id}')"
+            >
+                <div
+                    id="${this.id}-header"
+                    class="dragWindowHeader"
+                    onmousedown="currentSession.moveWindow(${this.id})"
+                >
+                    <div class="dragWindowControls">
+                        <button onmouseup="currentSession.destroyWindow('${this.id}')">&times;</button>
+                    </div>
+                    <div class="dragWindowHeaderTitle">
+                        ${this.title}
+                    </div>
+                    <div class="dragWindowControls">
+                    ` + (
+                        this.allowResizable === true ?
+                        `<button onmouseup="currentSession.zoomWindow('${this.id}')">&plus;</button>` :
+                        ''
+                    ) +
+                    ` 
+                        <button onmouseup="currentSession.hideWindow('${this.id}')">&minus;</button>
+                    </div>
+                </div>
+                <div
+                    id="${this.id}-content"
+                    class="dragWindowContent"
+                >
+                    ${this.body}
+                </div>
+        `;
+        if (this.allowResizable === true) {
+            windowGen += `
+                <div
+                    id="${this.id}-resizer"
+                    class="dragWindowResizer"
+                    onmousedown="currentSession.moveWindow(${this.id})"
+                >
+                </div>
+            </div>
+            `;
+        }
+
+        return windowGen;
+    }
+}
+
+class wmMenuItem {
+    constructor(title, action, enabled=false, customId=null) {
+        this.id = customId instanceof null ? uuidv4() : customId;
+        this.title = title;
+        this.action = action;
+        this.enabled = enabled ? true : false;
+    }
+}
+
+class wmMenu {
+    constructor(customId=null) {
+        this.id = customId instanceof null ? uuidv4() : customId;
+        this.menuItems = new Object();
+    }
+
+    addItem(menuItem) {
+        if (menuItem instanceof wmMenuItem) {
+            this.menuItems[menuItem.id] = menuItem;
+        }
+    }
+
+    addItems(menuItemsArray) {
+        for (const item of menuItemsArray) {
+            this.addItem(item);
+        }
+    }
+
+    renderItem(item) {
+        if (item instanceof wmMenuItem) {
+            return `
+                <li id="menuitem-${item.id}" onclick="menu">${item.title}</li>
+            `;
+        }
+    }
+
+    render() {
+        var menu = `
+            <div
+                id="${this.id}"
+                class="menuList"
+            >
+                <ul>
+        `;
+        for (const [key, value] of this.menuItems) {
+            menu += this.createEntry(key, value.title);
+        }
+        menu += `</ul></div>`;
+
+        return menu;
+    }
+}
+
+class wmTaskbarItem {
+    constructor(id=null, title, action) {
+        this.id = id instanceof null ? null : id;
+        this.title = title;
+        this.action = action;
+    }
+
+    render() {
+        return `
+            <button ${this.id instanceof null ? '' : 'id="' + this.id + '"'} onclick="${this.action}">${this.title}</button>
+        `;
+    }
+}
+
+class wmTasklistItem {
+    constructor(id, title) {
+        this.id = `tasklist-${id}`;
+        this.title = title;
+    }
+
+    render() {
+        return `
+            <button id="${this.id}" onclick="currentSession.toggleTasklistItem('${this.id}')">${this.title}</button>
+        `;
+    }
+}
+
+class wmTaskbar {
+    constructor() {
+        this.id = 'taskbar';
+        this.leftBarId = 'taskbarLeft';
+        this.tasklistId = 'taskbarTasklist';
+        this.rightBarId = 'taskbarRight';
+
+        this.leftItems = new Map();
+        this.tasklistItems = new Map();
+        this.rightItems = new Map();
+    }
+
+    render() {
+        if (!document.getElementById(`${this.id}`)) {
+            var taskbar = `
+                <div class='taskbar'>
+            `;
+            var taskbarLeft = `<div class='taskbarList' id='${this.leftBarId}'>`;
+            for (const [key, value] of this.leftItems) {
+                taskbarLeft += value.render();
+            }
+            taskbarLeft += "</div>";
+
+            var tasklist = `<div class='taskbarTasklist' id='${this.tasklistId}'>`;
+            for (const [key, value] of this.tasklistItems) {
+                tasklist += value.render();
+            }
+            tasklist += "</div>";
+
+            var taskbarRight = `<div class='taskbarList' id='${this.rightBarId}'>`;
+            for (const [key, value] of this.rightItems) {
+                taskbarRight += value.render();
+            }
+            taskbarRight += "</div>";
+
+            taskbar += taskBarLeft + tasklist + taskbarRight + '</div>';
+
+            return taskbar;
+        }
+    }
+
+    addTask(newWindow) {
+        const newTasklistItem = new wmTasklistItem(newWindow.id, newWindow.title);
+        this.tasklistItems.set(newTasklistItem.id, newTasklistItem);
+        const itemContent = newTasklistItem.render();
+        wmDraw.draw(this.tasklistId, itemContent);
     }
 }
 
@@ -51,6 +235,7 @@ class wmSession {
     constructor() {
         this.container = document.querySelector("#container");
         this.windowReg = new Map();
+        this.taskbar = new wmTaskbar();
     }
 
     createWindow(customWindow) {
@@ -64,8 +249,8 @@ class wmSession {
             this.windowReg.set(newWindow.id, newWindow);
         }
         let addWindowToSession = async () => {
-            this.renderWindow(newWindow);
-            this.renderTasklistItem(newWindow);
+            wmDraw.draw('container', newWindow.render());
+            this.taskbar.addTask(newWindow);
             taskmgr.add(newWindow.id, newWindow.title);
         };
         let updateSession = async () => {
@@ -91,62 +276,6 @@ class wmSession {
         });
     }
 
-    renderWindow(newWindow) {
-        var windowGen = `
-            <div
-                id="${newWindow.id}"
-                class="dragWindow"
-                onclick="currentSession.raiseWindow('${newWindow.id}')"
-            >
-                <div
-                    id="${newWindow.id}-header"
-                    class="dragWindowHeader"
-                    onmousedown="currentSession.moveWindow(${newWindow.id})"
-                >
-                    <div class="dragWindowControls">
-                        <button onmouseup="currentSession.destroyWindow('${newWindow.id}')">&times;</button>
-                    </div>
-                    <div class="dragWindowHeaderTitle">
-                        ${newWindow.title}
-                    </div>
-                    <div class="dragWindowControls">
-                    ` + (
-                        newWindow.allowResizable === true ?
-                        `<button onmouseup="currentSession.zoomWindow('${newWindow.id}')">&plus;</button>` :
-                        ''
-                    ) +
-                    ` 
-                        <button onmouseup="currentSession.hideWindow('${newWindow.id}')">&minus;</button>
-                    </div>
-                </div>
-                <div
-                    id="${newWindow.id}-content"
-                    class="dragWindowContent"
-                >
-                    ${newWindow.body}
-                </div>
-        `;
-        if (newWindow.allowResizable === true) {
-            windowGen += `
-                <div
-                    id="${newWindow.id}-resizer"
-                    class="dragWindowResizer"
-                    onmousedown="currentSession.moveWindow(${newWindow.id})"
-                >
-                </div>
-            </div>
-            `;
-        }
-
-        document.getElementById('container').innerHTML += windowGen;
-    }
-
-    renderTasklistItem(newWindow) {
-        document.getElementById('taskbarTasklist').innerHTML += `
-            <button id="tasklist-${newWindow.id}" onclick="currentSession.toggleTasklistItem('${newWindow.id}')">${newWindow.title}</button>
-        `;
-    }
-
     toggleTasklistItem(windowId) {
         const thisWindow = this.windowReg.get(windowId);
         if (thisWindow.hidden === false && thisWindow.focused === true) {
@@ -157,10 +286,10 @@ class wmSession {
     }
 
     destroyWindow(windowId) {
-        document.getElementById(windowId).remove();
-        document.getElementById(`tasklist-${windowId}`).remove();
+        wmDraw.destroy(windowId);
+        wmDraw.destroy(`tasklist-${windowId}`);
         if (document.getElementById(`taskman-item-${windowId}`)) {
-            document.getElementById(`taskman-item-${windowId}`).remove();
+            wmDraw.destroy(`taskman-item-${windowId}`);
         }
         this.windowReg.delete(windowId);
     }
@@ -209,7 +338,7 @@ class wmSession {
                 this.windowReg.zoomed = false;
             } else {
                 // fill screen (except taskbar)
-                const taskbarHeight = document.getElementById('taskbar').getBoundingClientRect().height;
+                const taskbarHeight = document.getElementById(this.taskbar.id).getBoundingClientRect().height;
                 windowMain.style.top = taskbarHeight + 'px';
                 windowMain.style.left = '0px';
                 windowMain.style.width = window.innerWidth;
@@ -233,14 +362,10 @@ class wmSession {
             e = e || window.event;
             e.preventDefault();
             document.onmouseup = closeFocusEvent;
-            document.getElementById(windowId).style.outline = '1px solid red';
             helper();
         }
     
         function closeFocusEvent() {
-            if (document.getElementById(windowId)) {
-                document.getElementById(windowId).style.outline = 'none';
-            }
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;
@@ -325,7 +450,6 @@ class wmSession {
             document.onmouseup = closeDragElement;
             // call a function whenever the cursor moves:
             document.onmousemove = elementDrag;
-            document.getElementById(elmnt.id).style.outline = '1px solid red';
         }
     
         function elementDrag(e) {
@@ -342,9 +466,6 @@ class wmSession {
         }
     
         function closeDragElement() {
-            if (document.getElementById(elmnt.id)) {
-                document.getElementById(elmnt.id).style.outline = 'none';
-            }
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;
@@ -367,7 +488,6 @@ class wmSession {
             document.onmouseup = closeDragElement;
             // call a function whenever the cursor moves:
             document.onmousemove = elementDrag;
-            document.getElementById(elmnt.id).style.outline = '1px solid red';
         }
     
         function elementDrag(e) {
@@ -384,7 +504,6 @@ class wmSession {
         }
     
         function closeDragElement() {
-            document.getElementById(elmnt.id).style.outline = 'none';
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;

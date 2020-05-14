@@ -4,7 +4,7 @@ html, body {
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
-    background: tomato;
+    background: darkcyan;
     overflow: hidden;
     user-select: none;
 }
@@ -16,7 +16,7 @@ html, body {
 }
 
 button {
-    padding: 8px;
+    padding: 4px;
     color: black;
     background-color: #d3d3d3;
     border: 2px solid #f1f1f1;
@@ -64,6 +64,11 @@ button:focus {
     border-bottom: 2px solid #f1f1f1;
 }
 
+.taskbarList {
+    display: flex;
+    flex-flow: row wrap;
+}
+
 .taskman ul {
     display: flex;
     flex-flow: column;
@@ -78,6 +83,34 @@ button:focus {
     justify-content: space-between;
     margin: 0;
     padding: 0;
+}
+
+.menuList {
+    position: absolute;
+    z-index: 100;
+    box-sizing: border-box;
+    color: black;
+    background-color: #d3d3d3;
+    border: 2px solid #f1f1f1;
+    border-right: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+.menuList ul {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.menuList li {
+    color: black;
+    background-color: #d3d3d3;
+}
+.menuList li:hover {
+    color: white;
+    background-color: black;
 }
 
 .dragWindow {
