@@ -1,10 +1,11 @@
 class wmMenu {
     constructor(customId=null, parentId=null, appId=null, hidden=true) {
         this.id = customId ? customId : 'a' + uuidv4();
-        this.parentId = parentId ? uuidv4() : parentId;
+        this.parentId = parentId;
         this.appId = appId ? null : appId;
-        this.menuItems = new Object();
         this.hidden = hidden;
+        this.menuItems = new Object();
+        this.subMenus = new Object();
     }
 
     addItem(menuItem) {
@@ -13,9 +14,21 @@ class wmMenu {
         }
     }
 
-    addItems(menuItemsArray) {
-        for (const item of menuItemsArray) {
+    addItems(menuItems) {
+        for (const item of menuItems) {
             this.addItem(item);
+        }
+    }
+
+    addSubMenu(submenu) {
+        if (submenu instanceof wmMenu) {
+            this.subMenus[submenu.id] = submenu;
+        }
+    }
+
+    addSubMenus(submenus) {
+        for (const item of submenus) {
+            this.addSubMenu(item);
         }
     }
 
@@ -35,6 +48,9 @@ class wmMenu {
             >
                 <ul>
         `;
+        if (this.parentId) {
+            menu += `<li id="menuitem-${this.id}" onclick="currentSession.hideMenu('${this.parentId}')">...Go Back</li>`
+        }
         for (const [key, value] of Object.entries(this.menuItems)) {
             menu += this.renderItem(value);
         }

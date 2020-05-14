@@ -52,18 +52,13 @@ class wmSession {
         wmElements.draw('container', this.taskbar.render());
         this.taskbar.addLeftItems([
             new wmTaskbarItem(null, "Launcher", "currentSession.launcherHelper()"),
-            new wmTaskbarItem(null, "TaskMan", "taskmgr.run()"),
-            new wmTaskbarItem(null, "PoolMan", "pool.poolman()"),
-            new wmTaskbarItem(null, "New", "currentSession.createWindow()"),
-        ]);
-        this.taskbar.addRightItems([
-            new wmTaskbarItem(null, "Backgrounds", "prefs.setBackgroundWindow()"),
         ]);
 
         this.createMenu(this.launcher);
         // wmElements.draw('container', this.launcher.render());
 
         this.resizeEventListener();
+        // this.menuClearEventListener();
     }
 
     launcherHelper() {
@@ -84,6 +79,15 @@ class wmSession {
             e = e || window.event;
             e.preventDefault();
             tasklistMaxWidth();
+        }
+    }
+
+    menuClearEventListener() {
+        wmElements.get('container').onmouseup = containerObserver;
+        const callHideAllMenus = () => this.hideAllMenus();
+
+        function containerObserver() {
+            callHideAllMenus();
         }
     }
 
@@ -130,10 +134,17 @@ class wmSession {
             let addMenuToRegistry = async () => {
                 this.menuReg.set(newMenu.id, newMenu);
             }
-            addMenuToRegistry().then(() => {
+            let addMenuToSession = async () => {
                 wmElements.draw('container', newMenu.render());
                 wmElements.get(newMenu.id).style.visibility = 'collapse';
                 wmElements.get(newMenu.id).style.display = 'none';
+            }
+            addMenuToRegistry().then(() => {
+                addMenuToSession().then(() => {
+                    for (const [key, value] of Object.entries(newMenu.subMenus)) {
+                        this.createMenu(value);
+                    }
+                });
             });
         }
     }
@@ -152,7 +163,6 @@ class wmSession {
 
     toggleTasklistItem(windowId) {
         const thisWindow = this.windowReg.get(windowId);
-        console.log(thisWindow);
         if (thisWindow.hidden === false && thisWindow.focused === true) {
             this.hideWindow(windowId);
         } else {
@@ -193,7 +203,7 @@ class wmSession {
         }
     }
 
-    hideMenu(menuId) {
+    hideMenu(menuId, xPos=null, yPos=null) {
         var menu = wmElements.get(menuId);
 
         if (menu.style.visibility === 'visible') {
@@ -205,27 +215,23 @@ class wmSession {
             menuEntry.hidden = true;
             this.menuReg.set(menuId, menuEntry);
         } else {
-            // Position menu under pointer
-            menu.style.top = window.event.clientX;
-            menu.style.left = window.event.clientY;
             // Show menu
             menu.style.visibility = 'visible';
             menu.style.display = 'flex';
+            // Position menu under pointer
+            menu.style.top = xPos ? xPos : window.event.clientX;
+            menu.style.left = yPos ? yPos : window.event.clientY;
             // Update registry
             var menuEntry = this.menuReg.get(menuId);
             menuEntry.hidden = false;
             this.menuReg.set(menuId, menuEntry);
-            // Hide menu on mouse out and onclick
-            wmElements.get(menuId).onmousedown = pointerObserver;
 
-            const callHideMenu = () => {
-                this.hideMenu(menuId)
-            }
+            // Set hiding options
+            wmElements.get(menu.id).onmousedown = menuObserver;
 
-            function pointerObserver(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // call a function whenever the cursor moves:
+            const callHideMenu = () => this.hideMenu(menu.id);
+
+            function menuObserver() {
                 document.onmouseup = closeMenu;
             }
         
@@ -233,6 +239,19 @@ class wmSession {
                 document.onmousedown = null;
                 callHideMenu();
             }
+        }
+    }
+
+    hideAllMenus() {
+        for (const menuId of this.menuReg.keys()) {
+            const menu = wmElements.get(menuId);
+            // Hide menu
+            menu.style.visibility = 'collapse';
+            menu.style.display = 'none';
+            // Update registry
+            var menuEntry = this.menuReg.get(menuId);
+            menuEntry.hidden = true;
+            this.menuReg.set(menuId, menuEntry);
         }
     }
 
