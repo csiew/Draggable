@@ -41,6 +41,7 @@ class wmSession {
     constructor() {
         this.container = document.querySelector("#container");
         this.windowReg = new Map();
+        this.menuReg = new Map();
         this.taskbar = new wmTaskbar();
     }
 
@@ -78,7 +79,7 @@ class wmSession {
         var newWindow;
         if (customWindow === undefined) {
             newWindow = new wmWindow("Hello World", "Lorem ipsum");
-        } else {
+        } else if (customWindow instanceof wmWindow) {
             newWindow = customWindow;
         }
         let addWindowToRegistry = async () => {
@@ -112,6 +113,45 @@ class wmSession {
         });
     }
 
+    createMenu(newMenu, e) {
+        if (newMenu instanceof wmMenu) {
+            e = e || window.event;
+            e.preventDefault();
+            xCursor = e.clientX;
+            yCursor = e.clientY;
+
+            let addMenuToRegistry = async () => {
+                this.menuReg.set(newMenu.id, newMenu);
+            }
+            let addMenuToSession = async () => {
+                wmElements.draw('container', newMenu.render());
+                wmElements.get(newMenu.id).style.visibility = 'visible';
+                wmElements.get(newMenu.id).style.display = 'flex';
+                wmElements.get(newMenu.id).style.top = yCursor;
+                wmElements.get(newMenu.id).style.left = xCursor;
+            };
+            addMenuToRegistry().then(() => {
+                addMenuToSession().then(() => {
+                    // Hide menu on mouse out
+                    wmElements.get(newMenu.id).onmouseout = this.hideMenu(newMenuId);
+                    wmElements.get(newMenu.id).onmousedown = this.hideMenu(newMenuId);
+                });
+            });
+        }
+    }
+
+    destroyWindow(windowId) {
+        wmElements.destroy(windowId);
+        wmElements.destroy(`tasklist-${windowId}`);
+        wmElements.destroy(`taskman-item-${windowId}`);
+        this.windowReg.delete(windowId);
+    }
+
+    destroyMenu(menuId) {
+        wmElements.destroy(menuId);
+        this.menuReg.delete(menuId);
+    }
+
     toggleTasklistItem(windowId) {
         const thisWindow = this.windowReg.get(windowId);
         console.log(thisWindow);
@@ -120,15 +160,6 @@ class wmSession {
         } else {
             this.raiseWindowHelper(windowId);
         }
-    }
-
-    destroyWindow(windowId) {
-        wmElements.destroy(windowId);
-        wmElements.destroy(`tasklist-${windowId}`);
-        if (wmElements.get(`taskman-item-${windowId}`)) {
-            wmElements.destroy(`taskman-item-${windowId}`);
-        }
-        this.windowReg.delete(windowId);
     }
 
     hideWindow(windowId) {
@@ -161,6 +192,28 @@ class wmSession {
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = false;
             this.windowReg.set(windowId, windowEntry);
+        }
+    }
+
+    hideMenu(menuId) {
+        var menu = wmElements.get(menuId);
+
+        if (menu.style.visibility === 'visible') {
+            // Hide menu
+            menu.style.visibility = 'collapse';
+            menu.style.display = 'none';
+            // Update registry
+            var menuEntry = this.menuReg.get(menuId);
+            menuEntry.hidden = true;
+            this.menuEntry.set(menuId, menuEntry);
+        } else {
+            // Show menu
+            menu.style.visibility = 'visible';
+            menu.style.display = 'flex';
+            // Update registry
+            var menuEntry = this.menuReg.get(menuId);
+            menuEntry.hidden = false;
+            this.menuEntry.set(menuId, menuEntry);
         }
     }
 

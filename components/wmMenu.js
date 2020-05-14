@@ -1,6 +1,8 @@
 class wmMenu {
-    constructor(customId=null) {
-        this.id = customId == null ? uuidv4() : customId;
+    constructor(customId=null, parentId=null, appId=null) {
+        this.id = customId ? uuidv4() : customId;
+        this.parentId = parentId ? uuidv4() : parentId;
+        this.appId = appId ? null : appId;
         this.menuItems = new Object();
     }
 

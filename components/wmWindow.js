@@ -4,6 +4,7 @@ class wmWindow {
         body,
         allowResizable=true,
         customId=null,
+        appId=null,
         focused=true,
         hidden=false,
         zoomed=false,
@@ -11,6 +12,7 @@ class wmWindow {
         customHeight=0
     ) {
         this.id = customId ? customId : 'a' + uuidv4();
+        this.appId = appId ? appId : uuidv4();
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
