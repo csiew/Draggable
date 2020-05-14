@@ -1,12 +1,12 @@
 class wmTasklistItem {
     constructor(id, title) {
-        this.id = `tasklist-${id}`;
+        this.id = id;
         this.title = title;
     }
 
     render() {
         return `
-            <button id="${this.id}" onclick="currentSession.toggleTasklistItem('${this.id}')">${this.title}</button>
+            <button id="tasklist-${this.id}" onclick="currentSession.toggleTasklistItem('${this.id}')">${this.title}</button>
         `;
     }
 }

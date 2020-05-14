@@ -99,8 +99,8 @@ class wmSession {
 
             // Use auto dimensions as default dimensions
             var windowInfo = this.windowReg.get(newWindow.id);
-            windowInfo.width = wmElements.get(newWindow.id).getBoundingClientRect().width;
-            windowInfo.width = wmElements.get(newWindow.id).getBoundingClientRect().height;
+            windowInfo.width = wmElements.bounds(newWindow.id).width;
+            windowInfo.width = wmElements.bounds(newWindow.id).height;
             this.windowReg.set(newWindow.id, windowInfo);
         }
         addWindowToRegistry().then(() => {
@@ -114,6 +114,7 @@ class wmSession {
 
     toggleTasklistItem(windowId) {
         const thisWindow = this.windowReg.get(windowId);
+        console.log(thisWindow);
         if (thisWindow.hidden === false && thisWindow.focused === true) {
             this.hideWindow(windowId);
         } else {
