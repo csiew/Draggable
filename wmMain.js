@@ -37,6 +37,10 @@ class wmElements {
     static get(id) {
         return document.getElementById(id);
     }
+
+    static getClass(className) {
+        return document.getElementsByClassName(className);
+    }
 }
 
 class wmSession {
@@ -107,17 +111,18 @@ class wmSession {
             taskmgr.add(newWindow.id, newWindow.title);
         };
         let updateSession = async () => {
-            var allKeys = this.windowReg.keys();
-    
+            //TODO: Stop all windows from refreshing content when new window created!
+
             // Make all windows draggable
+            var allKeys = this.windowReg.keys();
             for (const key of allKeys) {
-                this.moveWindow(key);
+                this.moveWindow(wmElements.get(key));
             }
 
             // Use auto dimensions as default dimensions
             var windowInfo = this.windowReg.get(newWindow.id);
-            windowInfo.width = wmElements.bounds(newWindow.id).width;
-            windowInfo.width = wmElements.bounds(newWindow.id).height;
+            windowInfo.minWidth = wmElements.bounds(newWindow.id).width;
+            windowInfo.minHeight = wmElements.bounds(newWindow.id).height;
             this.windowReg.set(newWindow.id, windowInfo);
         }
         addWindowToRegistry().then(() => {
@@ -261,8 +266,8 @@ class wmSession {
             
             if (this.windowReg.zoomed) {
                 // restore to default dimensions
-                windowMain.style.width = this.windowReg.get(windowId).width;
-                windowMain.style.height = this.windowReg.get(windowId).height;
+                windowMain.style.width = this.windowReg.get(windowId).minWidth;
+                windowMain.style.height = this.windowReg.get(windowId).minHeight;
                 this.windowReg.zoomed = false;
             } else {
                 // fill screen (except taskbar)
@@ -438,8 +443,8 @@ class wmSession {
         }
     }
 
-    moveWindow(windowId) {
-        this.dragWindow(wmElements.get(windowId));
-        this.resizeWindow(wmElements.get(windowId));
+    moveWindow(windowEntity) {
+        this.dragWindow(windowEntity);
+        this.resizeWindow(windowEntity);
     }
 }

@@ -115,6 +115,9 @@ button:focus {
     padding: 0;
 }
 .menuList li {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
     margin: 0;
     padding: 4px;
     color: black;
