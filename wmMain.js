@@ -112,6 +112,7 @@ class wmSession {
         };
         let updateSession = async () => {
             //TODO: Stop all windows from refreshing content when new window created!
+            console.log("Session refreshed");
 
             // Make all windows draggable
             var allKeys = this.windowReg.keys();
@@ -120,10 +121,9 @@ class wmSession {
             }
 
             // Use auto dimensions as default dimensions
-            var windowInfo = this.windowReg.get(newWindow.id);
-            windowInfo.minWidth = wmElements.bounds(newWindow.id).width;
-            windowInfo.minHeight = wmElements.bounds(newWindow.id).height;
-            this.windowReg.set(newWindow.id, windowInfo);
+            var newWindowEntity = wmElements.get(newWindow.id);
+            newWindowEntity.style.minWidth = wmElements.bounds(newWindow.id).width;
+            newWindowEntity.style.minHeight = wmElements.bounds(newWindow.id).height;
         }
         addWindowToRegistry().then(() => {
             addWindowToSession().then(() => {
@@ -437,6 +437,12 @@ class wmSession {
         }
     
         function closeDragElement() {
+            if (elmnt.style.width < elmnt.style.minWidth) {
+                elmnt.style.width = elmnt.style.minWidth;
+            }
+            if (elmnt.style.height < elmnt.style.minHeight) {
+                elmnt.style.height = elmnt.style.minHeight;
+            }
             // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;

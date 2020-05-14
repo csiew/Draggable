@@ -8,8 +8,6 @@ class wmWindow {
         focused=true,
         hidden=false,
         zoomed=false,
-        customWidth=0,
-        customHeight=0
     ) {
         this.id = customId ? customId : 'a' + uuidv4();
         this.appId = appId ? appId : uuidv4();
@@ -19,8 +17,6 @@ class wmWindow {
         this.focused = focused ? true : false;
         this.zoomed = zoomed ? true : false;
         this.hidden = hidden ? true : false;
-        this.width = (customWidth && customWidth < DEFAULT_WIDTH) ? DEFAULT_WIDTH : customWidth;
-        this.height = (customHeight && customHeight < DEFAULT_HEIGHT) ? DEFAULT_HEIGHT : customHeight;
     }
 
     render() {
