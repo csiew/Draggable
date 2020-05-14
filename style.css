@@ -53,20 +53,27 @@ button:focus {
 .taskbarTasklist {
     display: flex;
     flex-flow: row wrap;
+    justify-content: flex-start;
     justify-self: stretch;
     width: 100%;
     margin-left: 16px;
     margin-right: 16px;
 }
 .taskbarTasklist button {
+    max-width: 96px;
+    min-width: 76px;
+    width: 100%;
+    justify-self: stretch !important;
     border: 2px solid #c0c0c0;
     border-right: 2px solid #f1f1f1;
     border-bottom: 2px solid #f1f1f1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-
 .taskbarList {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
 }
 
 .taskman ul {

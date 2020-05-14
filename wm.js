@@ -27,6 +27,14 @@ class wmDraw {
     static destroy(id) {
         document.getElementById(id).remove();
     }
+
+    static bounds(id) {
+        return document.getElementById(id).getBoundingClientRect();
+    }
+
+    static get(id) {
+        return document.getElementById(id);
+    }
 }
 
 class wmWindow {
@@ -105,7 +113,7 @@ class wmWindow {
 
 class wmMenuItem {
     constructor(title, action, enabled=false, customId=null) {
-        this.id = customId instanceof null ? uuidv4() : customId;
+        this.id = customId == null ? uuidv4() : customId;
         this.title = title;
         this.action = action;
         this.enabled = enabled ? true : false;
@@ -114,7 +122,7 @@ class wmMenuItem {
 
 class wmMenu {
     constructor(customId=null) {
-        this.id = customId instanceof null ? uuidv4() : customId;
+        this.id = customId == null ? uuidv4() : customId;
         this.menuItems = new Object();
     }
 
@@ -157,14 +165,14 @@ class wmMenu {
 
 class wmTaskbarItem {
     constructor(id=null, title, action) {
-        this.id = id instanceof null ? null : id;
+        this.id = id == null ? null : id;
         this.title = title;
         this.action = action;
     }
 
     render() {
         return `
-            <button ${this.id instanceof null ? '' : 'id="' + this.id + '"'} onclick="${this.action}">${this.title}</button>
+            <button ${this.id == null ? '' : 'id="' + this.id + '"'} onclick="${this.action}">${this.title}</button>
         `;
     }
 }
@@ -197,7 +205,7 @@ class wmTaskbar {
     render() {
         if (!document.getElementById(`${this.id}`)) {
             var taskbar = `
-                <div class='taskbar'>
+                <div class='taskbar' id='${this.id}'>
             `;
             var taskbarLeft = `<div class='taskbarList' id='${this.leftBarId}'>`;
             for (const [key, value] of this.leftItems) {
@@ -217,17 +225,42 @@ class wmTaskbar {
             }
             taskbarRight += "</div>";
 
-            taskbar += taskBarLeft + tasklist + taskbarRight + '</div>';
+            taskbar += taskbarLeft + tasklist + taskbarRight + '</div>';
 
             return taskbar;
+        }
+    }
+
+    addLeft(newTaskbarItem) {
+        if (newTaskbarItem instanceof wmTaskbarItem) {
+            this.leftItems.set(newTaskbarItem.id, newTaskbarItem);
+            wmDraw.draw(this.leftBarId, newTaskbarItem.render());
+        }
+    }
+
+    addLeftItems(items) {
+        for (const item of items) {
+            this.addLeft(item);
+        }
+    }
+
+    addRight(newTaskbarItem) {
+        if (newTaskbarItem instanceof wmTaskbarItem) {
+            this.rightItems.set(newTaskbarItem.id, newTaskbarItem);
+            wmDraw.draw(this.rightBarId, newTaskbarItem.render());
+        }
+    }
+
+    addRightItems(items) {
+        for (const item of items) {
+            this.addRight(item);
         }
     }
 
     addTask(newWindow) {
         const newTasklistItem = new wmTasklistItem(newWindow.id, newWindow.title);
         this.tasklistItems.set(newTasklistItem.id, newTasklistItem);
-        const itemContent = newTasklistItem.render();
-        wmDraw.draw(this.tasklistId, itemContent);
+        wmDraw.draw(this.tasklistId, newTasklistItem.render());
     }
 }
 
@@ -236,6 +269,36 @@ class wmSession {
         this.container = document.querySelector("#container");
         this.windowReg = new Map();
         this.taskbar = new wmTaskbar();
+    }
+
+    init() {
+        wmDraw.draw('container', this.taskbar.render());
+        this.taskbar.addLeftItems([
+            new wmTaskbarItem(null, "TaskMan", "taskmgr.run()"),
+            new wmTaskbarItem(null, "PoolMan", "pool.poolman()"),
+            new wmTaskbarItem(null, "New", "currentSession.createWindow()"),
+        ]);
+        this.taskbar.addRightItems([
+            new wmTaskbarItem(null, "Backgrounds", "prefs.setBackgroundWindow()"),
+        ]);
+        this.resizeEventListener();
+    }
+
+    resizeEventListener() {
+        document.onresize = resize;
+        document.onfullscreenchange = resize;
+
+        const tasklistMaxWidth = () => {
+            // Set tasklist maximum width to maximum available space between both ends of taskbar
+            wmDraw.get(this.taskbar.tasklistId).style.maxWidth = wmDraw.bounds(this.taskbar.tasklistId).width;
+            console.log("Resized taskbar");
+        }
+    
+        function resize(e) {
+            e = e || window.event;
+            e.preventDefault();
+            tasklistMaxWidth();
+        }
     }
 
     createWindow(customWindow) {
@@ -677,6 +740,7 @@ class SessionManager {
 }
 
 currentSession = new wmSession();
+currentSession.init();
 taskmgr = new TaskManager();
 pool = new PoolManager();
 prefs = new Preferences();
