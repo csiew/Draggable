@@ -146,9 +146,11 @@ class wmSession {
             }
 
             // Use auto dimensions as default dimensions
-            var newWindowEntity = wmElements.get(newWindow.id);
-            newWindowEntity.style.minWidth = wmElements.bounds(newWindow.id).width;
-            newWindowEntity.style.minHeight = wmElements.bounds(newWindow.id).height;
+            if (newWindow.allowResizable) {
+                var newWindowEntity = wmElements.get(newWindow.id);
+                newWindowEntity.style.minWidth = wmElements.bounds(newWindow.id).width;
+                newWindowEntity.style.minHeight = wmElements.bounds(newWindow.id).height;
+            }
         }
         addWindowToRegistry().then(() => {
             addWindowToSession().then(() => {
