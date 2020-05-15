@@ -25,46 +25,108 @@ class Preferences {
         }
     }
 
-    setBackgroundColor(bgColor) {
+    setBackgroundDefault() {
         document.body.style.backgroundImage = 'none';
-        document.body.style.background = bgColor;
+        document.body.style.background = 'steelblue';
+    }
+
+    setBackgroundColor(bgColor) {
+        if (bgColor !== '') {
+            document.body.style.backgroundImage = 'none';
+            document.body.style.background = bgColor;
+        }
     }
 
     setBackgroundImg(imgUrl) {
-        document.body.style.backgroundImage = `url(${imgUrl})`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundOrigin = 'center';
+        if (imgUrl !== '') {
+            document.body.style.backgroundImage = `url(${imgUrl})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundOrigin = 'center';
+        }
+    }
+
+    setBackgroundFocusInputColor() {
+        wmElements.get('prefsBackgroundCustomColor').focus();
+    }
+
+    setBackgroundFocusInputImg() {
+        wmElements.get('prefsBackgroundCustomImg').focus();
+    }
+
+    setBackgroundFocusInputColorClear() {
+        wmElements.get('prefsBackgroundCustomColor').value = '';
+        wmElements.get('prefsBackgroundCustomColor').focus();
+    }
+
+    setBackgroundFocusInputImgClear() {
+        wmElements.get('prefsBackgroundCustomColor').value = '';
+        wmElements.get('prefsBackgroundCustomImg').focus();
     }
 
     setBackgroundWindow() {
-        var allItems = "<div class='taskman'><ul>";
-        allItems += `
+        var content = "<div class='taskman'><ul>";
+        content += `
+            <li>
+                <button onclick="prefs.setBackgroundDefault()">Default</button>
+            </li>
+        `;
+        content += `
             <li>
                 <h3>Colors</h3>
             </li>
         `;
         for (const [name, value] of Object.entries(this.backgrounds['color'])) {
-            allItems += `
+            content += `
                 <li>
                     <div>${name}</div>
                     <button onclick="prefs.setBackgroundColor('${value}')">Set</button>
                 </li>
             `
         }
-        allItems += `
+        content += `
+            <li>
+                <button type="submit" onclick="prefs.setBackgroundFocusInputColorClear()">&minus;</button>
+                <div>
+                    <input
+                        type="text"
+                        id="prefsBackgroundCustomColor"
+                        placeholder="#008B8B"
+                        onclick="prefs.setBackgroundFocusInputColor()"
+                    >
+                </div>
+                <button type="submit" onclick="prefs.setBackgroundColor(wmElements.get('prefsBackgroundCustomColor').value)">Set</button>
+                </input>
+            </li>
+        `;
+        content += `
             <li>
                 <h3>Images</h3>
             </li>
         `;
         for (const [name, value] of Object.entries(this.backgrounds['img'])) {
-            allItems += `
+            content += `
                 <li>
                     <div>${name}</div>
                     <button onclick="prefs.setBackgroundImg('${value}')">Set</button>
                 </li>
             `
         }
-        var prefsBackground = new wmWindow("Background", allItems, false);
+        content += `
+            <li>
+                <div>
+                <button type="submit" onclick="prefs.setBackgroundFocusInputImgClear()">&minus;</button>
+                    <input
+                        type="text"
+                        id="prefsBackgroundCustomImg"
+                        placeholder="https://images.unsplash.com/photo-1545159245-600763fadf07?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1328&q=80"
+                        onclick="prefs.setBackgroundFocusInputImg()"
+                    >
+                </div>
+                <button type="submit" onclick="prefs.setBackgroundImg(wmElements.get('prefsBackgroundCustomImg').value)">Set</button>
+                </input>
+            </li>
+        `;
+        var prefsBackground = new wmWindow("Background", content, false);
         currentSession.createWindow(prefsBackground);
     }
 }

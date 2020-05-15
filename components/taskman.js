@@ -4,7 +4,7 @@ class TaskManager {
             var allTasks = `
                 <div class='taskman'>
                     <ul id='taskman-entries'>
-                        <button onclick="taskmgr.purge()">Purge</button>
+                        <li><button onclick="taskmgr.purge()">Purge</button></li>
             `
             for (const [key, value] of currentSession.windowReg) {
                 allTasks += this.createEntry(key, value.title);

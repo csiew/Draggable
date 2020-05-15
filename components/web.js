@@ -11,7 +11,7 @@ class WebBrowser extends wmApp {
             <form action="javascript(console.log(browserUrl))">
                 <input type="text" id="browserUrl" name="browserUrl" value="${this.homeUrl}&output=embed">
                 <button type="submit">Load</button>
-            </form> 
+            </form>
             <iframe width="800" height="600" src="${this.homeUrl}&output=embed" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" frameborder="0"></iframe>
         `;
         content += "</ul></div>";
