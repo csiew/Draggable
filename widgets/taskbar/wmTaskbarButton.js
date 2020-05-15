@@ -1,6 +1,6 @@
-class wmTaskbarItem {
+class wmTaskbarButton extends wmTaskbarItem {
     constructor(id=null, title, action) {
-        this.id = id == null ? null : id;
+        super(id);
         this.title = title;
         this.action = action;
     }

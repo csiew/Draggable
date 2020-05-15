@@ -1,8 +1,20 @@
+var globals, currentSession, taskmgr, pool, prefs, browser, about, clock;
+
+// Initialisation
+globals = new wmGlobals();
 currentSession = new wmSession();
 currentSession.init();
 taskmgr = new TaskManager();
 pool = new PoolManager();
 prefs = new Preferences();
+browser = new WebBrowser();
+about = new About();
+// clock = new Clock();
+
+// Autostart
+// currentSession.runApp(clock);
+
+// Additional startup activities
 pool.batchAdd([
     [
         "Burgundy",
@@ -21,5 +33,3 @@ pool.batchAdd([
         '<iframe width="560" height="315" src="https://www.youtube.com/embed/lWM2kqdP1bc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
     ]
 ]);
-browser = new WebBrowser();
-about = new About();

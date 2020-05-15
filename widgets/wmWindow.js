@@ -14,9 +14,9 @@ class wmWindow {
         this.title = title;
         this.body = body;
         this.allowResizable = allowResizable;
-        this.focused = focused ? true : false;
-        this.zoomed = zoomed ? true : false;
-        this.hidden = hidden ? true : false;
+        this.focused = focused;
+        this.zoomed = zoomed;
+        this.hidden = hidden;
     }
 
     render() {

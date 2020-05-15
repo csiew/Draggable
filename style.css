@@ -1,4 +1,6 @@
 :root {
+    --BODY-FONT-SIZE: 12px;
+
     --ELEMENT-FG-COLOR: black;
     --ELEMENT-FG-COLOR-DISABLED: dimgray;
     --ELEMENT-BG-COLOR: #d3d3d3;
@@ -6,7 +8,7 @@
     --DOCUMENT-FG-COLOR: black;
     --DOCUMENT-BG-COLOR: white;
 
-    --ELEMENT-OUTLINE: 1px solid #5e5e5e;
+    --ELEMENT-OUTLINE: 1px solid #8e8e8e;
     --ELEMENT-SHADOW: 0px 0px 4px rgba(0,0,0,0.5);
 
     --BUTTON-FG-COLOR: black;
@@ -40,7 +42,7 @@ html, body {
     padding: 0;
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    font-size: var(--BODY-FONT-SIZE);
     background: steelblue;
     overflow: hidden;
     user-select: none;
@@ -157,6 +159,30 @@ input[type=text] {
 }
 .taskman li:last-child {
     margin-bottom: 0;
+}
+
+.taskbarTray {
+    padding: 2px;
+    background: var(--ELEMENT-BG-COLOR);
+    border: var(--BORDER-DARK);
+    border-right: var(--BORDER-LIGHT);
+    border-bottom: var(--BORDER-LIGHT);
+}
+.taskbarTray ul {
+    display: flex;
+    flex-flow: row;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.taskbarTray li {
+    display: inline-block;
+    margin: 2px;
+    padding: 0;
+}
+.taskbarTrayItemIcon, .taskbarTrayItemLabel {
+    margin: 0;
+    padding: 0;
 }
 
 .menuList {

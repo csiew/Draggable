@@ -68,4 +68,8 @@ class wmTaskbar {
         this.tasklistItems.set(newTasklistItem.id, newTasklistItem);
         wmElements.draw(this.tasklistId, newTasklistItem.render());
     }
+
+    setTrayId(trayId) {
+        this.trayId = trayId;
+    }
 }

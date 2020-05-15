@@ -1,95 +1,25 @@
-var currentSession, taskmgr, pool, prefs, browser, about;
-
-function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
-class wmElements {
-    static draw(id, content) {
-        document.getElementById(id).innerHTML += content;
-    }
-
-    static destroy(id) {
-        if (document.getElementById(id)) {
-            document.getElementById(id).remove();
-        }
-    }
-
-    static bounds(id) {
-        return document.getElementById(id).getBoundingClientRect();
-    }
-
-    static get(id) {
-        return document.getElementById(id);
-    }
-
-    static getClass(className) {
-        return document.getElementsByClassName(className);
-    }
-
-    static getStylePropValue(varName) {
-        return getComputedStyle(document.body).getPropertyValue(varName);
-    }
-}
-
-class wmGlobals {
-    //TODO: Convert class vars to static functions
-    constructor() {
-        this.colors = new Object();
-        this.sizes = new Object();
-        this.values = new Object();
-
-        // Colors
-        this.colors['DARK_BORDER'] = wmElements.getStylePropValue('--BORDER-DARK');
-        this.colors['LIGHT_BORDER'] = wmElements.getStylePropValue('--BORDER-LIGHT');
-        this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-FOCUSED');
-        this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-UNFOCUSED');
-
-        // Sizes
-        this.sizes['DEFAULT_WIDTH'] = wmElements.getStylePropValue('--WINDOW-MIN-WIDTH');
-        this.sizes['DEFAULT_HEIGHT'] = wmElements.getStylePropValue('--WINDOW-MIN-HEIGHT');
-
-        // Values
-        this.values['LEVEL_FOCUSED'] = 100;
-        this.values['LEVEL_UNFOCUSED'] = 5;
-    }
-
-    DARK_BORDER() { return this.colors['DARK_BORDER'] };
-    LIGHT_BORDER() { return this.colors['LIGHT_BORDER'] };
-    WINDOW_HEADER_BG_COLOR_FOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] };
-    WINDOW_HEADER_BG_COLOR_UNFOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] };
-
-    DEFAULT_WIDTH() { return this.sizes['DEFAULT_WIDTH'] };
-    DEFAULT_HEIGHT() { return this.sizes['DEFAULT_HEIGHT'] };
-
-    LEVEL_FOCUSED() { return this.values['LEVEL_FOCUSED'] };
-    LEVEL_UNFOCUSED() { return this.values['LEVEL_UNFOCUSED'] };
-}
-
 class wmSession {
     constructor() {
         this.container = document.querySelector("#container");
-        this.globals = new wmGlobals();
         this.windowReg = new Map();
         this.menuReg = new Map();
         this.taskbar = new wmTaskbar();
+        this.taskbarTray = new wmTaskbarTray();
         this.launcher = new Launcher();
     }
 
     init() {
         wmElements.draw('container', this.taskbar.render());
+        this.resizeEventListener();
+
         this.taskbar.addLeftItems([
-            new wmTaskbarItem(null, "Launcher", "currentSession.launcherHelper()"),
+            new wmTaskbarButton("taskbarLauncher", "Launcher", "currentSession.launcherHelper()"),
+        ]);
+        this.taskbar.addRightItems([
+            this.taskbarTray,
         ]);
 
         this.createMenu(this.launcher);
-        // wmElements.draw('container', this.launcher.render());
-
-        this.resizeEventListener();
-        // this.menuClearEventListener();
     }
 
     launcherHelper() {
@@ -118,6 +48,12 @@ class wmSession {
 
         function containerObserver() {
             callHideAllMenus();
+        }
+    }
+
+    runApp(applet) {
+        if (applet instanceof wmApp) {
+            applet.run();
         }
     }
 
@@ -211,10 +147,10 @@ class wmSession {
             windowMain.style.visibility = 'collapse';
             windowMain.style.display = 'none';
             // Embossed tasklist button
-            tasklistItem.style.borderBottom = this.globals.DARK_BORDER();
-            tasklistItem.style.borderRight = this.globals.DARK_BORDER();
-            tasklistItem.style.borderTop= this.globals.LIGHT_BORDER();
-            tasklistItem.style.borderLeft = this.globals.LIGHT_BORDER();
+            tasklistItem.style.borderBottom = globals.DARK_BORDER();
+            tasklistItem.style.borderRight = globals.DARK_BORDER();
+            tasklistItem.style.borderTop= globals.LIGHT_BORDER();
+            tasklistItem.style.borderLeft = globals.LIGHT_BORDER();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = true;
@@ -224,10 +160,10 @@ class wmSession {
             windowMain.style.visibility = 'visible';
             windowMain.style.display = 'flex';
             // Engraved tasklist button
-            tasklistItem.style.borderBottom = this.globals.LIGHT_BORDER();
-            tasklistItem.style.borderRight = this.globals.LIGHT_BORDER();
-            tasklistItem.style.borderTop = this.globals.DARK_BORDER();
-            tasklistItem.style.borderLeft = this.globals.DARK_BORDER();
+            tasklistItem.style.borderBottom = globals.LIGHT_BORDER();
+            tasklistItem.style.borderRight = globals.LIGHT_BORDER();
+            tasklistItem.style.borderTop = globals.DARK_BORDER();
+            tasklistItem.style.borderLeft = globals.DARK_BORDER();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = false;
@@ -293,8 +229,8 @@ class wmSession {
             
             if (this.windowReg.zoomed) {
                 // restore to default dimensions
-                windowMain.style.width = this.windowReg.get(windowId).minWidth;
-                windowMain.style.height = this.windowReg.get(windowId).minHeight;
+                windowMain.style.width = windowMain.style.minWidth;
+                windowMain.style.height = windowMain.style.minHeight;
                 this.windowReg.zoomed = false;
             } else {
                 // fill screen (except taskbar)
@@ -351,18 +287,18 @@ class wmSession {
         const tasklistItem = wmElements.get(`tasklist-${windowId}`);
 
         // Raise window and focus
-        windowMain.style.zIndex = this.globals.LEVEL_FOCUSED();
-        wmElements.get(windowId + '-header').style.background = this.globals.WINDOW_HEADER_BG_COLOR_FOCUSED();
+        windowMain.style.zIndex = globals.LEVEL_FOCUSED();
+        wmElements.get(windowId + '-header').style.background = globals.WINDOW_HEADER_BG_COLOR_FOCUSED();
 
         // Show window
         windowMain.style.visibility = 'visible';
         windowMain.style.display = 'flex';
 
         // Engraved tasklist button
-        tasklistItem.style.borderBottom = this.globals.LIGHT_BORDER();
-        tasklistItem.style.borderRight = this.globals.LIGHT_BORDER();
-        tasklistItem.style.borderTop = this.globals.DARK_BORDER();
-        tasklistItem.style.borderLeft = this.globals.DARK_BORDER();
+        tasklistItem.style.borderBottom = globals.LIGHT_BORDER();
+        tasklistItem.style.borderRight = globals.LIGHT_BORDER();
+        tasklistItem.style.borderTop = globals.DARK_BORDER();
+        tasklistItem.style.borderLeft = globals.DARK_BORDER();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
@@ -375,14 +311,14 @@ class wmSession {
         const tasklistItem = wmElements.get(`tasklist-${windowId}`);
 
         // Lower window and unfocus
-        windowMain.style.zIndex = this.globals.LEVEL_UNFOCUSED();
-        wmElements.get(windowId + '-header').style.background = this.globals.WINDOW_HEADER_BG_COLOR_UNFOCUSED();
+        windowMain.style.zIndex = globals.LEVEL_UNFOCUSED();
+        wmElements.get(windowId + '-header').style.background = globals.WINDOW_HEADER_BG_COLOR_UNFOCUSED();
 
         // Embossed tasklist button
-        tasklistItem.style.borderBottom = this.globals.DARK_BORDER();
-        tasklistItem.style.borderRight = this.globals.DARK_BORDER();
-        tasklistItem.style.borderTop = this.globals.LIGHT_BORDER();
-        tasklistItem.style.borderLeft = this.globals.LIGHT_BORDER();
+        tasklistItem.style.borderBottom = globals.DARK_BORDER();
+        tasklistItem.style.borderRight = globals.DARK_BORDER();
+        tasklistItem.style.borderTop = globals.LIGHT_BORDER();
+        tasklistItem.style.borderLeft = globals.LIGHT_BORDER();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
