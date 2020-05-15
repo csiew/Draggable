@@ -21,3 +21,5 @@ pool.batchAdd([
         '<iframe width="560" height="315" src="https://www.youtube.com/embed/lWM2kqdP1bc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
     ]
 ]);
+browser = new WebBrowser();
+about = new About();

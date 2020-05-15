@@ -1,16 +1,4 @@
-const LEVEL_FOCUSED = 100;
-const LEVEL_UNFOCUSED = 5;
-
-const DEFAULT_WIDTH = '180px';
-const DEFAULT_HEIGHT = '120px';
-
-const DARK_BORDER_COLOR = "#c0c0c0";
-const LIGHT_BORDER_COLOR = "#f1f1f1";
-
-const WINDOW_HEADER_BG_COLOR_FOCUSED = "#800020";
-const WINDOW_HEADER_BG_COLOR_UNFOCUSED = "#A07983";
-
-var currentSession, taskmgr, pool, prefs;
+var currentSession, taskmgr, pool, prefs, browser, about;
 
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -41,11 +29,50 @@ class wmElements {
     static getClass(className) {
         return document.getElementsByClassName(className);
     }
+
+    static getStylePropValue(varName) {
+        return getComputedStyle(document.body).getPropertyValue(varName);
+    }
+}
+
+class wmGlobals {
+    //TODO: Convert class vars to static functions
+    constructor() {
+        this.colors = new Object();
+        this.sizes = new Object();
+        this.values = new Object();
+
+        // Colors
+        this.colors['DARK_BORDER_COLOR'] = wmElements.getStylePropValue('--BORDER-COLOR-DARK');
+        this.colors['LIGHT_BORDER_COLOR'] = wmElements.getStylePropValue('--BORDER-COLOR-LIGHT');
+        this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-FOCUSED');
+        this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-UNFOCUSED');
+
+        // Sizes
+        this.sizes['DEFAULT_WIDTH'] = wmElements.getStylePropValue('--WINDOW-MIN-WIDTH');
+        this.sizes['DEFAULT_HEIGHT'] = wmElements.getStylePropValue('--WINDOW-MIN-HEIGHT');
+
+        // Values
+        this.values['LEVEL_FOCUSED'] = 100;
+        this.values['LEVEL_UNFOCUSED'] = 5;
+    }
+
+    DARK_BORDER_COLOR() { return this.colors['DARK_BORDER_COLOR'] };
+    LIGHT_BORDER_COLOR() { return this.colors['LIGHT_BORDER_COLOR'] };
+    WINDOW_HEADER_BG_COLOR_FOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] };
+    WINDOW_HEADER_BG_COLOR_UNFOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] };
+
+    DEFAULT_WIDTH() { return this.sizes['DEFAULT_WIDTH'] };
+    DEFAULT_HEIGHT() { return this.sizes['DEFAULT_HEIGHT'] };
+
+    LEVEL_FOCUSED() { return this.values['LEVEL_FOCUSED'] };
+    LEVEL_UNFOCUSED() { return this.values['LEVEL_UNFOCUSED'] };
 }
 
 class wmSession {
     constructor() {
         this.container = document.querySelector("#container");
+        this.globals = new wmGlobals();
         this.windowReg = new Map();
         this.menuReg = new Map();
         this.taskbar = new wmTaskbar();
@@ -76,7 +103,6 @@ class wmSession {
         const tasklistMaxWidth = () => {
             // Set tasklist maximum width to maximum available space between both ends of taskbar
             wmElements.get(this.taskbar.tasklistId).style.maxWidth = wmElements.bounds(this.taskbar.tasklistId).width;
-            console.log("Resized taskbar");
         }
     
         function resize(e) {
@@ -112,7 +138,6 @@ class wmSession {
         };
         let updateSession = async () => {
             //TODO: Stop all windows from refreshing content when new window created!
-            console.log("Session refreshed");
 
             // Make all windows draggable
             var allKeys = this.windowReg.keys();
@@ -184,10 +209,10 @@ class wmSession {
             windowMain.style.visibility = 'collapse';
             windowMain.style.display = 'none';
             // Embossed tasklist button
-            tasklistItem.style.borderBottomColor = DARK_BORDER_COLOR;
-            tasklistItem.style.borderRightColor = DARK_BORDER_COLOR;
-            tasklistItem.style.borderTopColor = LIGHT_BORDER_COLOR;
-            tasklistItem.style.borderLeftColor = LIGHT_BORDER_COLOR;
+            tasklistItem.style.borderBottomColor = this.globals.DARK_BORDER_COLOR();
+            tasklistItem.style.borderRightColor = this.globals.DARK_BORDER_COLOR();
+            tasklistItem.style.borderTopColor = this.globals.LIGHT_BORDER_COLOR();
+            tasklistItem.style.borderLeftColor = this.globals.LIGHT_BORDER_COLOR();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = true;
@@ -197,10 +222,10 @@ class wmSession {
             windowMain.style.visibility = 'visible';
             windowMain.style.display = 'flex';
             // Engraved tasklist button
-            tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
-            tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
-            tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
-            tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+            tasklistItem.style.borderBottomColor = this.globals.LIGHT_BORDER_COLOR();
+            tasklistItem.style.borderRightColor = this.globals.LIGHT_BORDER_COLOR();
+            tasklistItem.style.borderTopColor = this.globals.DARK_BORDER_COLOR();
+            tasklistItem.style.borderLeftColor = this.globals.DARK_BORDER_COLOR();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = false;
@@ -324,18 +349,18 @@ class wmSession {
         const tasklistItem = wmElements.get(`tasklist-${windowId}`);
 
         // Raise window and focus
-        windowMain.style.zIndex = LEVEL_FOCUSED;
-        wmElements.get(windowId + '-header').style.background = WINDOW_HEADER_BG_COLOR_FOCUSED;
+        windowMain.style.zIndex = this.globals.LEVEL_FOCUSED();
+        wmElements.get(windowId + '-header').style.background = this.globals.WINDOW_HEADER_BG_COLOR_FOCUSED();
 
         // Show window
         windowMain.style.visibility = 'visible';
         windowMain.style.display = 'flex';
 
         // Engraved tasklist button
-        tasklistItem.style.borderBottomColor = LIGHT_BORDER_COLOR;
-        tasklistItem.style.borderRightColor = LIGHT_BORDER_COLOR;
-        tasklistItem.style.borderTopColor = DARK_BORDER_COLOR;
-        tasklistItem.style.borderLeftColor = DARK_BORDER_COLOR;
+        tasklistItem.style.borderBottomColor = this.globals.LIGHT_BORDER_COLOR();
+        tasklistItem.style.borderRightColor = this.globals.LIGHT_BORDER_COLOR();
+        tasklistItem.style.borderTopColor = this.globals.DARK_BORDER_COLOR();
+        tasklistItem.style.borderLeftColor = this.globals.DARK_BORDER_COLOR();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
@@ -348,14 +373,14 @@ class wmSession {
         const tasklistItem = wmElements.get(`tasklist-${windowId}`);
 
         // Lower window and unfocus
-        windowMain.style.zIndex = LEVEL_UNFOCUSED;
-        wmElements.get(windowId + '-header').style.background = WINDOW_HEADER_BG_COLOR_UNFOCUSED;
+        windowMain.style.zIndex = this.globals.LEVEL_UNFOCUSED();
+        wmElements.get(windowId + '-header').style.background = this.globals.WINDOW_HEADER_BG_COLOR_UNFOCUSED();
 
         // Embossed tasklist button
-        tasklistItem.style.borderBottomColor = DARK_BORDER_COLOR;
-        tasklistItem.style.borderRightColor = DARK_BORDER_COLOR;
-        tasklistItem.style.borderTopColor = LIGHT_BORDER_COLOR;
-        tasklistItem.style.borderLeftColor = LIGHT_BORDER_COLOR;
+        tasklistItem.style.borderBottomColor = this.globals.DARK_BORDER_COLOR();
+        tasklistItem.style.borderRightColor = this.globals.DARK_BORDER_COLOR();
+        tasklistItem.style.borderTopColor = this.globals.LIGHT_BORDER_COLOR();
+        tasklistItem.style.borderLeftColor = this.globals.LIGHT_BORDER_COLOR();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
