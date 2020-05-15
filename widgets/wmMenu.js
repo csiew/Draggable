@@ -9,9 +9,7 @@ class wmMenu {
     }
 
     addItem(menuItem) {
-        if (menuItem instanceof wmMenuItem) {
-            this.menuItems[menuItem.id] = menuItem;
-        }
+        this.menuItems[menuItem.id] = menuItem;
     }
 
     addItems(menuItems) {
@@ -32,22 +30,6 @@ class wmMenu {
         }
     }
 
-    renderItem(item) {
-        if (item instanceof wmMenuItem) {
-            if (item.subMenuId) {
-                return `
-                    <li id="menuitem-${item.id}" onclick="${item.action}">
-                        <div>${item.title}</div>
-                        <div>&rdsh;</div>
-                    </li>
-                `;
-            }
-            return `
-                <li id="menuitem-${item.id}" onclick="${item.action}">${item.title}</li>
-            `;
-        }
-    }
-
     render() {
         var menu = `
             <div
@@ -61,10 +43,11 @@ class wmMenu {
                 <li id="menuitem-${this.id}" onclick="currentSession.hideMenu('${this.parentId}')">
                     <div>&crarr;</div>
                 </li>
-            `
+            `;
+            menu += wmMenuDivider.staticRender();
         }
         for (const [key, value] of Object.entries(this.menuItems)) {
-            menu += this.renderItem(value);
+            menu += value.render();
         }
         menu += `</ul></div>`;
 

@@ -12,4 +12,18 @@ class wmMenuItem {
         this.subMenuId = subMenuId;
         this.enabled = enabled;
     }
+
+    render() {
+        if (this.subMenuId) {
+            return `
+                <li id="menuitem-${this.id}" onclick="${this.action}">
+                    <div>${this.title}</div>
+                    <div>&rdsh;</div>
+                </li>
+            `;
+        }
+        return `
+            <li id="menuitem-${this.id}" onclick="${this.action}">${this.title}</li>
+        `;
+    }
 }

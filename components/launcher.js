@@ -14,6 +14,7 @@ class Launcher extends wmMenu {
         super.addItems([
             new wmMenuItem("About", "about.run()"),
             new wmMenuItem("Preferences", `currentSession.hideMenu('${prefSubmenu.id}')`, prefSubmenu.id),
+            new wmMenuDivider(),
             new wmMenuItem("Task Manager", "taskmgr.run()"),
             new wmMenuItem("Pool Manager", "pool.poolman()"),
             new wmMenuItem("Web Browser", "browser.run()"),
