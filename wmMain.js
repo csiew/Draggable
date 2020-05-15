@@ -43,8 +43,8 @@ class wmGlobals {
         this.values = new Object();
 
         // Colors
-        this.colors['DARK_BORDER_COLOR'] = wmElements.getStylePropValue('--BORDER-COLOR-DARK');
-        this.colors['LIGHT_BORDER_COLOR'] = wmElements.getStylePropValue('--BORDER-COLOR-LIGHT');
+        this.colors['DARK_BORDER'] = wmElements.getStylePropValue('--BORDER-DARK');
+        this.colors['LIGHT_BORDER'] = wmElements.getStylePropValue('--BORDER-LIGHT');
         this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-FOCUSED');
         this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-UNFOCUSED');
 
@@ -57,8 +57,8 @@ class wmGlobals {
         this.values['LEVEL_UNFOCUSED'] = 5;
     }
 
-    DARK_BORDER_COLOR() { return this.colors['DARK_BORDER_COLOR'] };
-    LIGHT_BORDER_COLOR() { return this.colors['LIGHT_BORDER_COLOR'] };
+    DARK_BORDER() { return this.colors['DARK_BORDER'] };
+    LIGHT_BORDER() { return this.colors['LIGHT_BORDER'] };
     WINDOW_HEADER_BG_COLOR_FOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] };
     WINDOW_HEADER_BG_COLOR_UNFOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] };
 
@@ -211,10 +211,10 @@ class wmSession {
             windowMain.style.visibility = 'collapse';
             windowMain.style.display = 'none';
             // Embossed tasklist button
-            tasklistItem.style.borderBottomColor = this.globals.DARK_BORDER_COLOR();
-            tasklistItem.style.borderRightColor = this.globals.DARK_BORDER_COLOR();
-            tasklistItem.style.borderTopColor = this.globals.LIGHT_BORDER_COLOR();
-            tasklistItem.style.borderLeftColor = this.globals.LIGHT_BORDER_COLOR();
+            tasklistItem.style.borderBottom = this.globals.DARK_BORDER();
+            tasklistItem.style.borderRight = this.globals.DARK_BORDER();
+            tasklistItem.style.borderTop= this.globals.LIGHT_BORDER();
+            tasklistItem.style.borderLeft = this.globals.LIGHT_BORDER();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = true;
@@ -224,10 +224,10 @@ class wmSession {
             windowMain.style.visibility = 'visible';
             windowMain.style.display = 'flex';
             // Engraved tasklist button
-            tasklistItem.style.borderBottomColor = this.globals.LIGHT_BORDER_COLOR();
-            tasklistItem.style.borderRightColor = this.globals.LIGHT_BORDER_COLOR();
-            tasklistItem.style.borderTopColor = this.globals.DARK_BORDER_COLOR();
-            tasklistItem.style.borderLeftColor = this.globals.DARK_BORDER_COLOR();
+            tasklistItem.style.borderBottom = this.globals.LIGHT_BORDER();
+            tasklistItem.style.borderRight = this.globals.LIGHT_BORDER();
+            tasklistItem.style.borderTop = this.globals.DARK_BORDER();
+            tasklistItem.style.borderLeft = this.globals.DARK_BORDER();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = false;
@@ -359,10 +359,10 @@ class wmSession {
         windowMain.style.display = 'flex';
 
         // Engraved tasklist button
-        tasklistItem.style.borderBottomColor = this.globals.LIGHT_BORDER_COLOR();
-        tasklistItem.style.borderRightColor = this.globals.LIGHT_BORDER_COLOR();
-        tasklistItem.style.borderTopColor = this.globals.DARK_BORDER_COLOR();
-        tasklistItem.style.borderLeftColor = this.globals.DARK_BORDER_COLOR();
+        tasklistItem.style.borderBottom = this.globals.LIGHT_BORDER();
+        tasklistItem.style.borderRight = this.globals.LIGHT_BORDER();
+        tasklistItem.style.borderTop = this.globals.DARK_BORDER();
+        tasklistItem.style.borderLeft = this.globals.DARK_BORDER();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
@@ -379,10 +379,10 @@ class wmSession {
         wmElements.get(windowId + '-header').style.background = this.globals.WINDOW_HEADER_BG_COLOR_UNFOCUSED();
 
         // Embossed tasklist button
-        tasklistItem.style.borderBottomColor = this.globals.DARK_BORDER_COLOR();
-        tasklistItem.style.borderRightColor = this.globals.DARK_BORDER_COLOR();
-        tasklistItem.style.borderTopColor = this.globals.LIGHT_BORDER_COLOR();
-        tasklistItem.style.borderLeftColor = this.globals.LIGHT_BORDER_COLOR();
+        tasklistItem.style.borderBottom = this.globals.DARK_BORDER();
+        tasklistItem.style.borderRight = this.globals.DARK_BORDER();
+        tasklistItem.style.borderTop = this.globals.LIGHT_BORDER();
+        tasklistItem.style.borderLeft = this.globals.LIGHT_BORDER();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);

@@ -32,6 +32,7 @@ class wmWindow {
                     onmousedown="currentSession.moveWindow(${this.id})"
                 >
                     <div class="dragWindowControls">
+                        <button onmouseup="currentSession.destroyWindow('${this.id}')">&times;</button>
                     </div>
                     <div class="dragWindowHeaderTitle">
                         ${this.title}
@@ -39,7 +40,6 @@ class wmWindow {
                     <div class="dragWindowControls">
                         <button onmouseup="currentSession.hideWindow('${this.id}')">&minus;</button>
                         <button onmouseup="currentSession.zoomWindow('${this.id}')" ${this.allowResizable === true ? '' : 'disabled'}>&plus;</button>
-                        <button onmouseup="currentSession.destroyWindow('${this.id}')">&times;</button>
                     </div>
                 </div>
                 <div

@@ -2,12 +2,29 @@
     --ELEMENT-FG-COLOR: black;
     --ELEMENT-FG-COLOR-DISABLED: dimgray;
     --ELEMENT-BG-COLOR: #d3d3d3;
+
+    --ELEMENT-SHADOW: 2px 2px 0px rgba(0,0,0,0.5);
+
+    --BUTTON-FG-COLOR: black;
+    --BUTTON-BG-COLOR: linear-gradient(to bottom, #f3f3f3, #d3d3d3);
+    --BUTTON-BG-COLOR-ACTIVE: linear-gradient(to bottom, #e3e3e3, #d3d3d3);
+    --BUTTON-BG-COLOR-HOLD: linear-gradient(to bottom, #a3a3a3, #c3c3c3);
+
     --HEADER-FG-COLOR: white;
-    --HEADER-BG-COLOR-FOCUSED: navy;
-    --HEADER-BG-COLOR-UNFOCUSED: dimgray;
+    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, royalblue, navy);
+    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, lightgray, dimgray);
+
+    --MENULIST-FG-COLOR: black;
+    --MENULIST-BG-COLOR: #d3d3d3;
+    --MENULIST-BG-COLOR-HOVER: linear-gradient(to bottom, #a3a3a3, #c3c3c3);
+
     --BORDER-COLOR-DARK: #a0a0a0;
     --BORDER-COLOR-LIGHT: #f5f5f5;
-    --RESIZER-BG-COLOR-NEUTRAL: #d3d3d3;
+
+    --BORDER-DARK: 1px solid var(--BORDER-COLOR-DARK);
+    --BORDER-LIGHT: 1px solid var(--BORDER-COLOR-LIGHT);
+
+    --RESIZER-BG-COLOR: #d3d3d3;
     --RESIZER-BG-COLOR-ACTIVE: #a3a3a3;
 
     --WINDOW-MIN-WIDTH: '180px';
@@ -19,7 +36,7 @@ html, body {
     padding: 0;
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     background: darkcyan;
     overflow: hidden;
     user-select: none;
@@ -35,18 +52,19 @@ html, body {
 
 button {
     padding: 4px;
-    color: var(--ELEMENT-FG-COLOR);
-    background-color: var(--ELEMENT-BG-COLOR);
-    border: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-right: 2px solid var(--BORDER-COLOR-DARK);
-    border-bottom: 2px solid var(--BORDER-COLOR-DARK);
+    color: var(--BUTTON-FG-COLOR);
+    background: var(--BUTTON-BG-COLOR);
+    border: var(--BORDER-LIGHT);
+    border-right: var(--BORDER-DARK);
+    border-bottom: var(--BORDER-DARK);
     font-family: inherit;
     font-size: inherit;
 }
 button:active {
-    border: 2px solid var(--BORDER-COLOR-DARK);
-    border-right: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-bottom: 2px solid var(--BORDER-COLOR-LIGHT);
+    background: var(--BUTTON-BG-COLOR-ACTIVE);
+    border: var(--BORDER-DARK);
+    border-right: var(--BORDER-LIGHT);
+    border-bottom: var(--BORDER-LIGHT);
 }
 button:focus {
     outline: none;
@@ -61,10 +79,10 @@ button:focus {
     padding: 2px;
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
-    background-color: var(--ELEMENT-BG-COLOR);
-    border: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-right: 2px solid var(--BORDER-COLOR-DARK);
-    border-bottom: 2px solid var(--BORDER-COLOR-DARK);
+    background: var(--ELEMENT-BG-COLOR);
+    border: var(--BORDER-LIGHT);
+    border-right: var(--BORDER-DARK);
+    border-bottom: var(--BORDER-DARK);
     font-family: inherit;
     font-size: inherit;
 }
@@ -82,18 +100,15 @@ button:focus {
     min-width: 76px;
     width: 100%;
     justify-self: stretch !important;
-    border: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-right: 2px solid var(--BORDER-COLOR-DARK);
-    border-bottom: 2px solid var(--BORDER-COLOR-DARK);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
 }
 .taskbarTasklist button:active {
-    border: 2px solid var(--BORDER-COLOR-DARK) !important;
-    border-right: 2px solid var(--BORDER-COLOR-LIGHT) !important;
-    border-bottom: 2px solid var(--BORDER-COLOR-LIGHT) !important;
+    border: var(--BORDER-DARK);
+    border-right: var(--BORDER-LIGHT);
+    border-bottom: var(--BORDER-LIGHT);
 }
 .taskbarList {
     display: flex;
@@ -126,11 +141,11 @@ button:focus {
     z-index: 100;
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
-    background-color: var(--ELEMENT-BG-COLOR);
-    border: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-right: 2px solid var(--BORDER-COLOR-DARK);
-    border-bottom: 2px solid var(--BORDER-COLOR-DARK);
-    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    background: var(--ELEMENT-BG-COLOR);
+    border: var(--BORDER-LIGHT);
+    border-right: var(--BORDER-DARK);
+    border-bottom: var(--BORDER-DARK);
+    box-shadow: var(--ELEMENT-SHADOW);
 }
 .menuList ul {
     display: flex;
@@ -146,12 +161,11 @@ button:focus {
     justify-content: space-between;
     margin: 0;
     padding: 4px;
-    color: var(--ELEMENT-FG-COLOR);
-    background-color: var(--ELEMENT-BG-COLOR);
+    color: var(--MENULIST-FG-COLOR);
+    background: var(--MENULIST-BG-COLOR);
 }
 .menuList li:hover {
-    color: var(--HEADER-FG-COLOR);
-    background-color: var(--HEADER-BG-COLOR-FOCUSED);
+    background: var(--MENULIST-BG-COLOR-HOVER);
 }
 .menuListDivider {
     width: 100%;
@@ -169,11 +183,11 @@ button:focus {
     min-height: var(--WINDOW-MIN-HEIGHT);
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
-    background-color: var(--ELEMENT-BG-COLOR);
-    border: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-right: 2px solid var(--BORDER-COLOR-DARK);
-    border-bottom: 2px solid var(--BORDER-COLOR-DARK);
-    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    background: var(--ELEMENT-BG-COLOR);
+    border: var(--BORDER-LIGHT);
+    border-right: var(--BORDER-DARK);
+    border-bottom: var(--BORDER-DARK);
+    box-shadow: var(--ELEMENT-SHADOW);
 }
 
 .dragWindowHeader {
@@ -187,7 +201,7 @@ button:focus {
     cursor: move;
     z-index: 10;
     color: var(--HEADER-FG-COLOR);
-    background-color: var(--HEADER-BG-COLOR-FOCUSED);
+    background: var(--HEADER-BG-COLOR-FOCUSED);
     font-weight: bold;
 }
 
@@ -195,11 +209,12 @@ button:focus {
     align-self: center;
     justify-self: stretch;
     width: 100%;
+    margin-left: 8px;
     margin-right: 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: left;
+    text-align: center;
 }
 .dragWindowControls {
     display: flex;
@@ -234,11 +249,11 @@ button:focus {
     margin-left: auto;
     margin-top: auto;
     cursor: nwse-resize;
-    background-color: var(--RESIZER-BG-COLOR-NEUTRAL);
-    border: 2px solid var(--BORDER-COLOR-DARK);
-    border-right: 2px solid var(--BORDER-COLOR-LIGHT);
-    border-bottom: 2px solid var(--BORDER-COLOR-LIGHT);
+    background: var(--RESIZER-BG-COLOR);
+    border: var(--BORDER-DARK);
+    border-right: var(--BORDER-LIGHT);
+    border-bottom: var(--BORDER-LIGHT);
 }
 .dragWindowResizer:active {
-    background-color: var(--RESIZER-BG-COLOR-ACTIVE);
+    background: var(--RESIZER-BG-COLOR-ACTIVE);
 }
