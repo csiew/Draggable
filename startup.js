@@ -1,4 +1,4 @@
-var globals, currentSession, taskmgr, pool, prefs, browser, about, clock;
+var globals, currentSession, taskmgr, pool, prefs, browser, about, clock, ytClient;
 
 // Initialisation
 globals = new wmGlobals();
@@ -10,6 +10,7 @@ prefs = new Preferences();
 browser = new WebBrowser();
 about = new About();
 // clock = new Clock();
+ytClient = new YouTubeClient();
 
 // Autostart
 // currentSession.runApp(clock);
@@ -30,6 +31,6 @@ pool.batchAdd([
     ],
     [
         "Video",
-        '<iframe width="560" height="315" src="https://www.youtube.com/embed/NmN9gy0HvCo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+        '<iframe style="align-self: stretch; justify-self: stretch; width: inherit; height: inherit;" width="720" height="560" src="https://www.youtube.com/embed/NmN9gy0HvCo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
     ]
 ]);

@@ -18,6 +18,7 @@ class Launcher extends wmMenu {
             new wmMenuItem("Task Manager", "taskmgr.run()"),
             new wmMenuItem("Pool Manager", "pool.poolman()"),
             new wmMenuItem("Web Browser", "browser.run()"),
+            new wmMenuItem("YouTube Client", "ytClient.run()"),
             new wmMenuItem("New Sample Window", "currentSession.createWindow()"),
         ]);
     }
