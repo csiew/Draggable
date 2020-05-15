@@ -30,6 +30,6 @@ pool.batchAdd([
     ],
     [
         "Video",
-        '<iframe width="560" height="315" src="https://www.youtube.com/embed/lWM2kqdP1bc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+        '<iframe width="560" height="315" src="https://www.youtube.com/embed/NmN9gy0HvCo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
     ]
 ]);
