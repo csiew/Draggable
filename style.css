@@ -90,6 +90,11 @@ button:focus {
     text-overflow: ellipsis;
     text-align: left;
 }
+.taskbarTasklist button:active {
+    border: 2px solid var(--BORDER-COLOR-DARK) !important;
+    border-right: 2px solid var(--BORDER-COLOR-LIGHT) !important;
+    border-bottom: 2px solid var(--BORDER-COLOR-LIGHT) !important;
+}
 .taskbarList {
     display: flex;
     flex-flow: row;
