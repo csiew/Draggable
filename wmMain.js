@@ -73,19 +73,18 @@ class wmSession {
             taskmgr.add(newWindow.id, newWindow.title);
         };
         let updateSession = async () => {
-            //TODO: Stop all windows from refreshing content when new window created!
-
-            // Make all windows draggable
-            var allKeys = this.windowReg.keys();
-            for (const key of allKeys) {
-                this.moveWindow(wmElements.get(key));
-            }
-
             // Use auto dimensions as default dimensions
             if (newWindow.allowResizable) {
                 var newWindowEntity = wmElements.get(newWindow.id);
                 newWindowEntity.style.minWidth = wmElements.bounds(newWindow.id).width;
                 newWindowEntity.style.minHeight = wmElements.bounds(newWindow.id).height;
+            }
+
+            //TODO: Stop all windows from refreshing content when new window created!
+            // Make all windows draggable
+            var allKeys = this.windowReg.keys();
+            for (const key of allKeys) {
+                this.moveWindow(wmElements.get(key));
             }
         }
         addWindowToRegistry().then(() => {

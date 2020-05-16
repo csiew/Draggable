@@ -1,6 +1,6 @@
 class wmElements {
     static draw(id, content) {
-        document.getElementById(id).innerHTML += content;
+        document.getElementById(id).insertAdjacentHTML('beforeend', content);
     }
 
     static destroy(id) {
