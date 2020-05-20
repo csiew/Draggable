@@ -1,26 +1,18 @@
-# Draggable
+# Hoddle
 > This is still a work in progress! Some basic window maangement features are a little broken and task management needs some work.
 
-Just a quickly-hacked-together JavaScript window manager. Stylized as a 90's window manager, but it could easily be stylized into something much more modern. This is based off a tutorial from w3schools on draggable elements. I've expanded it to function a little like a window manager.
+Hoddle (named after Melbourne's [Hoddle Grid](https://en.wikipedia.org/wiki/Hoddle_Grid)) is a quickly-hacked-together JavaScript window manager. This is based off a tutorial from w3schools on draggable elements. I've expanded it to function a little like a window manager.
 
 This could be used (and re-skinned) for use on other web apps where windowed activities are necessary.
 
 ## Features
 
-### Stage 1
 - [x] Movable windows
 - [x] Taskbar or dock
 - [x] Task Management
-- [ ] Batch Processing?
-- [ ] Custom basic *apps* (each window's body just shows a snippet of HTML)
-- [ ] Libraries of widgets for *apps*
-- [ ] Notepad or text editor app
+- [ ] Batch Processing
 - [ ] Integration with local storage
-- [ ] Themes
-
-### Stage 2
-- [ ] Migrate to Node
-- [ ] Postgres data store
+- [ ] Convert into library for use on other sites
 
 ## Inspired by...
-Draggable was influenced by [poolside.fm](https://poolside.fm/) and [Windows 93](https://www.windows93.net/), and other web apps that use some form of basic window management like the old versions of [Pixlr Editor](https://pixlr.com/e/).
+Hoddle was influenced by [poolside.fm](https://poolside.fm/) and [Windows 93](https://www.windows93.net/), and other web apps that use some form of basic window management like the old versions of [Pixlr Editor](https://pixlr.com/e/).
