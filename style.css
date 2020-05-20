@@ -3,26 +3,30 @@
 
     --ELEMENT-FG-COLOR: black;
     --ELEMENT-FG-COLOR-DISABLED: dimgray;
-    --ELEMENT-BG-COLOR: #d3d3d3;
+    --ELEMENT-BG-COLOR: #f3f3f3;
+    --ELEMENT-OUTLINE: none;
+    --ELEMENT-SHADOW: 0px 4px 8px rgba(0,0,0,0.5);
+    --ELEMENT-BORDER: 1px solid #a0a0a0;
+    --ELEMENT-BORDER-RADIUS: 5px;
 
     --DOCUMENT-FG-COLOR: black;
     --DOCUMENT-BG-COLOR: white;
 
-    --ELEMENT-OUTLINE: 1px solid #8e8e8e;
-    --ELEMENT-SHADOW: 0px 0px 4px rgba(0,0,0,0.5);
-
     --BUTTON-FG-COLOR: black;
     --BUTTON-BG-COLOR: linear-gradient(to bottom, #f3f3f3, #d3d3d3);
-    --BUTTON-BG-COLOR-ACTIVE: linear-gradient(to bottom, #e3e3e3, #d3d3d3);
+    --BUTTON-BG-COLOR-ACTIVE: linear-gradient(to bottom, #d3d3d3, #e3e3e3);
+    --BUTTON-BORDER: var(--ELEMENT-BORDER);
+    --BUTTON-BORDER-RADIUS: 5px;
+    --BUTTON-SHADOW: 0px 0px 8px rgba(0,0,0,0.25);
 
-    --HEADER-FG-COLOR: white;
-    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, royalblue, navy);
-    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, lightgray, dimgray);
+    --HEADER-FG-COLOR: black;
+    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, #f3f3f3, #d3d3d3);
+    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, #d3d3d3, #e3e3e3);
 
     --MENULIST-FG-COLOR: black;
-    --MENULIST-BG-COLOR: #d3d3d3;
-    --MENULIST-BG-COLOR-HOVER: linear-gradient(to bottom, #a3a3a3, #c3c3c3);
-    --MENULIST-BG-COLOR-ACTIVE: linear-gradient(to bottom, #5e5e5e, #9f9f9f);
+    --MENULIST-BG-COLOR: #f3f3f3;
+    --MENULIST-BG-COLOR-HOVER: #a3a3a3;
+    --MENULIST-BG-COLOR-ACTIVE: #5e5e5e;
 
     --BORDER-COLOR-DARK: #a0a0a0;
     --BORDER-COLOR-LIGHT: #f5f5f5;
@@ -30,8 +34,8 @@
     --BORDER-DARK: 1px solid var(--BORDER-COLOR-DARK);
     --BORDER-LIGHT: 1px solid var(--BORDER-COLOR-LIGHT);
 
-    --RESIZER-BG-COLOR: #d3d3d3;
-    --RESIZER-BG-COLOR-ACTIVE: #a3a3a3;
+    --RESIZER-BG-COLOR: white;
+    --RESIZER-BG-COLOR-ACTIVE: gray;
 
     --WINDOW-MIN-WIDTH: '180px';
     --WINDOW-MIN-HEIGHT: '120px';
@@ -60,18 +64,14 @@ button {
     padding: 4px;
     color: var(--BUTTON-FG-COLOR);
     background: var(--BUTTON-BG-COLOR);
-    border: var(--BORDER-LIGHT);
-    border-right: var(--BORDER-DARK);
-    border-bottom: var(--BORDER-DARK);
+    border: var(--BUTTON-BORDER);
+    border-radius: var(--BUTTON-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
     font-family: inherit;
     font-size: inherit;
 }
-button:active {
+button:active, .taskbarTasklist button:active {
     background: var(--BUTTON-BG-COLOR-ACTIVE);
-    border: var(--BORDER-DARK);
-    border-right: var(--BORDER-LIGHT);
-    border-bottom: var(--BORDER-LIGHT);
 }
 button:focus {
     outline: none;
@@ -80,12 +80,11 @@ button:focus {
 input[type=text] {
     margin: 2px;
     padding: 4px;
-    border: var(--BORDER-DARK);
-    border-right: var(--BORDER-LIGHT);
-    border-bottom: var(--BORDER-LIGHT);
-    outline: var(--ELEMENT-OUTLINE);
     color: var(--DOCUMENT-FG-COLOR);
     background: var(--DOCUMENT-BG-COLOR);
+    border: var(--BUTTON-BORDER);
+    border-radius: var(--BUTTON-BORDER-RADIUS);
+    outline: var(--ELEMENT-OUTLINE);
     font-family: inherit;
     font-size: inherit;
 }
@@ -98,11 +97,12 @@ input[type=text] {
     width: 100%;
     padding: 2px;
     box-sizing: border-box;
-    color: var(--ELEMENT-FG-COLOR);
-    background: var(--ELEMENT-BG-COLOR);
+    color: var(--BUTTON-FG-COLOR);
+    background: var(--BUTTON-BG-COLOR);
     border: var(--BORDER-LIGHT);
     border-right: var(--BORDER-DARK);
     border-bottom: var(--BORDER-DARK);
+    box-shadow: var(--ELEMENT-SHADOW);
     font-family: inherit;
     font-size: inherit;
 }
@@ -120,24 +120,18 @@ input[type=text] {
     min-width: 76px;
     width: 100%;
     justify-self: stretch !important;
+    margin-right: 4px;
     white-space: nowrap;
     overflow: hidden;
-    outline: var(--ELEMENT-OUTLINE);
     text-overflow: ellipsis;
     text-align: left;
 }
-.taskbarTasklist button:active {
-    background: var(--BUTTON-BG-COLOR-ACTIVE);
-    border: var(--BORDER-DARK);
-    border-right: var(--BORDER-LIGHT);
-    border-bottom: var(--BORDER-LIGHT);
+.taskbarTasklist button:last-child {
+    margin-right: 0;
 }
 .taskbarList {
     display: flex;
     flex-flow: row;
-}
-.taskbarList button {
-    outline: var(--ELEMENT-OUTLINE);
 }
 
 .taskman ul {
@@ -163,10 +157,9 @@ input[type=text] {
 
 .taskbarTray {
     padding: 2px;
-    background: var(--ELEMENT-BG-COLOR);
-    border: var(--BORDER-DARK);
-    border-right: var(--BORDER-LIGHT);
-    border-bottom: var(--BORDER-LIGHT);
+    background: var(--BUTTON-BG-COLOR-ACTIVE);
+    border: var(--ELEMENT-BORDER);
+    border-radius: var(--ELEMENT-BORDER-RADIUS);
 }
 .taskbarTray ul {
     display: flex;
@@ -191,11 +184,11 @@ input[type=text] {
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
     background: var(--ELEMENT-BG-COLOR);
-    border: var(--BORDER-LIGHT);
-    border-right: var(--BORDER-DARK);
-    border-bottom: var(--BORDER-DARK);
+    border: var(--ELEMENT-BORDER);
+    border-radius: var(--ELEMENT-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
     box-shadow: var(--ELEMENT-SHADOW);
+    opacity: 90%;
 }
 .menuList ul {
     display: flex;
@@ -203,7 +196,7 @@ input[type=text] {
     justify-content: flex-start;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 2px;
 }
 .menuList li {
     display: flex;
@@ -213,6 +206,7 @@ input[type=text] {
     padding: 4px;
     color: var(--MENULIST-FG-COLOR);
     background: var(--MENULIST-BG-COLOR);
+    border-radius: var(--ELEMENT-BORDER-RADIUS);
 }
 .menuList li:hover {
     background: var(--MENULIST-BG-COLOR-HOVER);
@@ -237,9 +231,8 @@ input[type=text] {
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
     background: var(--ELEMENT-BG-COLOR);
-    border: var(--BORDER-LIGHT);
-    border-right: var(--BORDER-DARK);
-    border-bottom: var(--BORDER-DARK);
+    border: var(--ELEMENT-BORDER);
+    border-radius: var(--ELEMENT-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
     box-shadow: var(--ELEMENT-SHADOW);
 }
@@ -256,6 +249,9 @@ input[type=text] {
     z-index: 10;
     color: var(--HEADER-FG-COLOR);
     background: var(--HEADER-BG-COLOR-FOCUSED);
+    border-bottom: var(--ELEMENT-BORDER);
+    border-top-left-radius: var(--ELEMENT-BORDER-RADIUS);
+    border-top-right-radius: var(--ELEMENT-BORDER-RADIUS);
     font-weight: bold;
 }
 
@@ -306,14 +302,13 @@ input[type=text] {
     min-height: 16px;
     bottom: 0;
     right: 0;
-    margin: 0;
+    margin: 2px;
     margin-left: auto;
     margin-top: auto;
     cursor: nwse-resize;
     background: var(--RESIZER-BG-COLOR);
-    border: var(--BORDER-DARK);
-    border-right: var(--BORDER-LIGHT);
-    border-bottom: var(--BORDER-LIGHT);
+    border: var(--BUTTON-BORDER);
+    border-radius: var(--ELEMENT-BORDER-RADIUS);
 }
 .dragWindowResizer:active {
     background: var(--RESIZER-BG-COLOR-ACTIVE);

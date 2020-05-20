@@ -146,10 +146,7 @@ class wmSession {
             windowMain.style.visibility = 'collapse';
             windowMain.style.display = 'none';
             // Embossed tasklist button
-            tasklistItem.style.borderBottom = globals.DARK_BORDER();
-            tasklistItem.style.borderRight = globals.DARK_BORDER();
-            tasklistItem.style.borderTop= globals.LIGHT_BORDER();
-            tasklistItem.style.borderLeft = globals.LIGHT_BORDER();
+            tasklistItem.style.background = globals.BUTTON_BG_COLOR();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = true;
@@ -159,10 +156,7 @@ class wmSession {
             windowMain.style.visibility = 'visible';
             windowMain.style.display = 'flex';
             // Engraved tasklist button
-            tasklistItem.style.borderBottom = globals.LIGHT_BORDER();
-            tasklistItem.style.borderRight = globals.LIGHT_BORDER();
-            tasklistItem.style.borderTop = globals.DARK_BORDER();
-            tasklistItem.style.borderLeft = globals.DARK_BORDER();
+            tasklistItem.style.background = globals.BUTTON_BG_COLOR_ACTIVE();
             // Update registry
             var windowEntry = this.windowReg.get(windowId);
             windowEntry.hidden = false;
@@ -293,11 +287,8 @@ class wmSession {
         windowMain.style.visibility = 'visible';
         windowMain.style.display = 'flex';
 
-        // Engraved tasklist button
-        tasklistItem.style.borderBottom = globals.LIGHT_BORDER();
-        tasklistItem.style.borderRight = globals.LIGHT_BORDER();
-        tasklistItem.style.borderTop = globals.DARK_BORDER();
-        tasklistItem.style.borderLeft = globals.DARK_BORDER();
+        // Engrave tasklist button
+        tasklistItem.style.background = globals.BUTTON_BG_COLOR_ACTIVE();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);
@@ -314,10 +305,7 @@ class wmSession {
         wmElements.get(windowId + '-header').style.background = globals.WINDOW_HEADER_BG_COLOR_UNFOCUSED();
 
         // Embossed tasklist button
-        tasklistItem.style.borderBottom = globals.DARK_BORDER();
-        tasklistItem.style.borderRight = globals.DARK_BORDER();
-        tasklistItem.style.borderTop = globals.LIGHT_BORDER();
-        tasklistItem.style.borderLeft = globals.LIGHT_BORDER();
+        tasklistItem.style.background = globals.BUTTON_BG_COLOR();
 
         // Update registry
         var windowEntry = this.windowReg.get(windowId);

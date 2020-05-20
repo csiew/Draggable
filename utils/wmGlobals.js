@@ -5,8 +5,8 @@ class wmGlobals {
         this.values = new Object();
 
         // Colors
-        this.colors['DARK_BORDER'] = wmElements.getStylePropValue('--BORDER-DARK');
-        this.colors['LIGHT_BORDER'] = wmElements.getStylePropValue('--BORDER-LIGHT');
+        this.colors['BUTTON_BG_COLOR'] = wmElements.getStylePropValue('--BUTTON-BG-COLOR');
+        this.colors['BUTTON_BG_COLOR_ACTIVE'] = wmElements.getStylePropValue('--BUTTON-BG-COLOR-ACTIVE');
         this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-FOCUSED');
         this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] = wmElements.getStylePropValue('--HEADER-BG-COLOR-UNFOCUSED');
 
@@ -20,8 +20,8 @@ class wmGlobals {
         this.values['LEVEL_UNFOCUSED'] = 5;
     }
 
-    DARK_BORDER() { return this.colors['DARK_BORDER'] };
-    LIGHT_BORDER() { return this.colors['LIGHT_BORDER'] };
+    BUTTON_BG_COLOR() { return this.colors['BUTTON_BG_COLOR'] };
+    BUTTON_BG_COLOR_ACTIVE() { return this.colors['BUTTON_BG_COLOR_ACTIVE'] };
     WINDOW_HEADER_BG_COLOR_FOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_FOCUSED'] };
     WINDOW_HEADER_BG_COLOR_UNFOCUSED() { return this.colors['WINDOW_HEADER_BG_COLOR_UNFOCUSED'] };
 

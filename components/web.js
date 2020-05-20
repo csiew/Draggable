@@ -2,6 +2,7 @@ class WebBrowser extends wmApp {
     constructor() {
         super("Web Browser");
         this.appWindow = null;
+        this.browserPageFrameStyle = "position: absolute; align-self: stretch; justify-self: stretch; box-sizing: border-box; background: white;";
     }
 
     run() {
@@ -22,19 +23,21 @@ class WebBrowser extends wmApp {
                 </li>
             </ul>
             </div>
-            <div id="browserUrlPageframe" style="position: relative; align-self: stretch; justify-self: stretch; width: inherit; height: inherit;"></div>
+            <div id="browserPageFrame" style="${this.browserPageFrameStyle}"></div>
         `;
         this.appWindow = new wmWindow(this.name, content);
-        currentSession.createWindow(this.appWindow);
+        const renderWindow = async () => { currentSession.createWindow(this.appWindow); };
+        renderWindow().then(() => {
+            wmElements.get(this.appWindow.id).style.width = '480px';
+            wmElements.get(this.appWindow.id).style.height = '360px';
+        });
     }
 
     setUrl(pageUrl) {
-        const pageFrame = wmElements.get('browserUrlPageframe');
+        const pageFrame = wmElements.get('browserPageFrame');
         const setPageFrameSize = async () => {
-            pageFrame.style.width = '480px';
-            pageFrame.style.height = '360px';
             pageFrame.innerHTML = `
-                <iframe style="position: absolute; align-self: stretch; justify-self: stretch; width: 100%; height: 100%;" src="${pageUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" frameborder="0"></iframe>
+                <iframe id="browserPageFrame" style="${this.browserPageFrameStyle} width: 100%; height: 100%;" src="${pageUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" frameborder="0"></iframe>
             `;
         }
         setPageFrameSize().then(() => {
@@ -45,7 +48,7 @@ class WebBrowser extends wmApp {
     }
 
     clear() {
-        const pageFrame = wmElements.get('browserUrlPageframe');
+        const pageFrame = wmElements.get('browserPageFrame');
         const setPageFrameSize = async () => {
             pageFrame.innerHTML = '';
             pageFrame.style.width = '0px';

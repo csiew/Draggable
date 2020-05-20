@@ -2,7 +2,7 @@ class About extends wmApp {
     constructor() {
         super('About', 'about');
 
-        this.wmName = "Draggable";
+        this.wmName = "Hoddle";
         this.wmVersion = "0.1";
         this.wmDescription = "A JavaScript window manager and toolkit.";
         this.wmCopyright = "&copy; 2020, Clarence Siew. All rights reserved.";
