@@ -1,11 +1,11 @@
 :root {
-    --BODY-FONT-SIZE: 12px;
+    --BODY-FONT-SIZE: 14px;
 
     --ELEMENT-FG-COLOR: black;
     --ELEMENT-FG-COLOR-DISABLED: dimgray;
     --ELEMENT-BG-COLOR: #f3f3f3;
     --ELEMENT-OUTLINE: none;
-    --ELEMENT-SHADOW: 0px 4px 8px rgba(0,0,0,0.5);
+    --ELEMENT-SHADOW: 0px 2px 8px rgba(0,0,0,0.5);
     --ELEMENT-BORDER: 1px solid #a0a0a0;
     --ELEMENT-BORDER-RADIUS: 5px;
 
@@ -13,19 +13,38 @@
     --DOCUMENT-BG-COLOR: white;
 
     --BUTTON-FG-COLOR: black;
-    --BUTTON-BG-COLOR: linear-gradient(to bottom, #f3f3f3, #d3d3d3);
-    --BUTTON-BG-COLOR-ACTIVE: linear-gradient(to bottom, #d3d3d3, #e3e3e3);
+    --BUTTON-BG-COLOR: linear-gradient(to bottom, white, #f9f9f9, #f3f3f3, #e3e3e3);
+    --BUTTON-BG-COLOR-HOVER: linear-gradient(to bottom, #f9f9f9, #e3e3e3);
+    --BUTTON-BG-COLOR-ACTIVE: #d3d3d3;
     --BUTTON-BORDER: var(--ELEMENT-BORDER);
     --BUTTON-BORDER-RADIUS: 5px;
     --BUTTON-SHADOW: 0px 0px 8px rgba(0,0,0,0.25);
 
-    --HEADER-FG-COLOR: black;
-    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, #f3f3f3, #d3d3d3);
-    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, #d3d3d3, #e3e3e3);
+    --TEXTFIELD-BORDER: 3px solid #a3a3a3;
+    --TEXTFIELD-BORDER-FOCUS: 3px solid royalblue;
+    --TEXTFIELD-SHADOW: 0px 2px 2px rgba(0,0,0,0.25) inset;
+
+    --WINDOW-BG-COLOR: var(--ELEMENT-BG-COLOR);
+    --WINDOW-CONTENT-FG-COLOR: black;
+    --WINDOW-CONTENT-BG-COLOR: var(--ELEMENT-BG-COLOR);
+    --WINDOW-BORDER: none;
+    --WINDOW-SHADOW: 0px 4px 8px rgba(0,0,0,0.5);
+
+    --WINDOW-CONTROL-FG-COLOR: black;
+    --WINDOW-CONTROL-BG-COLOR: white;
+    --WINDOW-CONTROL-BG-COLOR-HOVER: #f3f3f3;
+    --WINDOW-CONTROL-BG-COLOR-ACTIVE: gray;
+    --WINDOW-CONTROL-BORDER-RADIUS: 16px;
+    --WINDOW-CONTROL-SHADOW: 0px 2px 2px rgba(0,0,0,0.125);
+
+    --HEADER-FG-COLOR: white;
+    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, deepskyblue, royalblue);
+    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, lightgray, gray);
 
     --MENULIST-FG-COLOR: black;
-    --MENULIST-BG-COLOR: #f3f3f3;
-    --MENULIST-BG-COLOR-HOVER: #a3a3a3;
+    --MENULIST-FG-COLOR-HOVER: white;
+    --MENULIST-BG-COLOR: var(--ELEMENT-BG-COLOR);
+    --MENULIST-BG-COLOR-HOVER: linear-gradient(to bottom, deepskyblue, royalblue);
     --MENULIST-BG-COLOR-ACTIVE: #5e5e5e;
 
     --BORDER-COLOR-DARK: #a0a0a0;
@@ -34,6 +53,7 @@
     --BORDER-DARK: 1px solid var(--BORDER-COLOR-DARK);
     --BORDER-LIGHT: 1px solid var(--BORDER-COLOR-LIGHT);
 
+    --RESIZER-FG-COLOR: gray;
     --RESIZER-BG-COLOR: white;
     --RESIZER-BG-COLOR-ACTIVE: gray;
 
@@ -45,9 +65,12 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: 'Proxima Nova', Helvetica, Arial, sans-serif;
     font-size: var(--BODY-FONT-SIZE);
     background: steelblue;
+    background-image: url(../assets/Abstract.png);
+    background-size: cover;
+    background-origin: border-box;
     overflow: hidden;
     user-select: none;
 }
@@ -62,6 +85,8 @@ html, body {
 
 button {
     padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: var(--BUTTON-FG-COLOR);
     background: var(--BUTTON-BG-COLOR);
     border: var(--BUTTON-BORDER);
@@ -69,6 +94,9 @@ button {
     outline: var(--ELEMENT-OUTLINE);
     font-family: inherit;
     font-size: inherit;
+}
+button:hover {
+    background: var(--BUTTON-BG-COLOR-HOVER);
 }
 button:active, .taskbarTasklist button:active {
     background: var(--BUTTON-BG-COLOR-ACTIVE);
@@ -80,13 +108,19 @@ button:focus {
 input[type=text] {
     margin: 2px;
     padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: var(--DOCUMENT-FG-COLOR);
     background: var(--DOCUMENT-BG-COLOR);
-    border: var(--BUTTON-BORDER);
+    border: var(--TEXTFIELD-BORDER);
     border-radius: var(--BUTTON-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
+    box-shadow: var(--TEXTFIELD-SHADOW);
     font-family: inherit;
     font-size: inherit;
+}
+input[type=text]:focus {
+    border: var(--TEXTFIELD-BORDER-FOCUS);
 }
 
 .taskbar {
@@ -97,12 +131,11 @@ input[type=text] {
     width: 100%;
     padding: 2px;
     box-sizing: border-box;
-    color: var(--BUTTON-FG-COLOR);
-    background: var(--BUTTON-BG-COLOR);
+    color: var(--ELEMENT-FG-COLOR);
+    background: var(--ELEMENT-BG-COLOR);
     border: var(--BORDER-LIGHT);
     border-right: var(--BORDER-DARK);
     border-bottom: var(--BORDER-DARK);
-    box-shadow: var(--ELEMENT-SHADOW);
     font-family: inherit;
     font-size: inherit;
 }
@@ -188,7 +221,6 @@ input[type=text] {
     border-radius: var(--ELEMENT-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
     box-shadow: var(--ELEMENT-SHADOW);
-    opacity: 90%;
 }
 .menuList ul {
     display: flex;
@@ -196,19 +228,23 @@ input[type=text] {
     justify-content: flex-start;
     list-style: none;
     margin: 0;
-    padding: 2px;
+    padding: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 .menuList li {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     margin: 0;
-    padding: 4px;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: var(--MENULIST-FG-COLOR);
     background: var(--MENULIST-BG-COLOR);
-    border-radius: var(--ELEMENT-BORDER-RADIUS);
 }
 .menuList li:hover {
+    color: var(--MENULIST-FG-COLOR-HOVER);
     background: var(--MENULIST-BG-COLOR-HOVER);
 }
 .menuList li:active {
@@ -224,17 +260,18 @@ input[type=text] {
     flex-flow: column;
     justify-content: space-between;
     z-index: 9;
+    padding: 0;
     max-width: 100%;
     max-height: 100%;
     min-width: var(--WINDOW-MIN-WIDTH);
     min-height: var(--WINDOW-MIN-HEIGHT);
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
-    background: var(--ELEMENT-BG-COLOR);
-    border: var(--ELEMENT-BORDER);
+    background: var(--WINDOW-BG-COLOR);
+    border: var(--WINDOW-BORDER);
     border-radius: var(--ELEMENT-BORDER-RADIUS);
     outline: var(--ELEMENT-OUTLINE);
-    box-shadow: var(--ELEMENT-SHADOW);
+    box-shadow: var(--WINDOW-SHADOW);
 }
 
 .dragWindowHeader {
@@ -249,7 +286,6 @@ input[type=text] {
     z-index: 10;
     color: var(--HEADER-FG-COLOR);
     background: var(--HEADER-BG-COLOR-FOCUSED);
-    border-bottom: var(--ELEMENT-BORDER);
     border-top-left-radius: var(--ELEMENT-BORDER-RADIUS);
     border-top-right-radius: var(--ELEMENT-BORDER-RADIUS);
     font-weight: bold;
@@ -274,7 +310,17 @@ input[type=text] {
     padding: 4px;
     padding-top: 1px;
     padding-bottom: 1px;
+    color: var(--WINDOW-CONTROL-FG-COLOR);
+    background: var(--WINDOW-CONTROL-BG-COLOR);
+    border-radius: var(--WINDOW-CONTROL-BORDER-RADIUS);
+    box-shadow: var(--WINDOW-CONTROL-SHADOW);
     line-height: 1;
+}
+.dragWindowControls button:hover {
+    background: var(--WINDOW-CONTROL-BG-COLOR-HOVER);
+}
+.dragWindowControls button:active {
+    background: var(--WINDOW-CONTROL-BG-COLOR-ACTIVE);
 }
 .dragWindowControls button:disabled {
     color: var(--ELEMENT-FG-COLOR-DISABLED);
@@ -289,27 +335,24 @@ input[type=text] {
     justify-content: flex-start;
     width: 100%;
     height: 100%;
-    margin: 2px;
-    margin-top: 0;
+    margin: 0;
     padding: 8px;
     box-sizing: border-box;
+    background: var(--WINDOW-CONTENT-BG-COLOR);
+    border-bottom-left-radius: var(--ELEMENT-BORDER-RADIUS);
+    border-bottom-right-radius: var(--ELEMENT-BORDER-RADIUS);
     text-align: left;
 }
 
 .dragWindowResizer {
     position: relative;
-    min-width: 16px;
-    min-height: 16px;
     bottom: 0;
     right: 0;
-    margin: 2px;
+    margin: 0;
     margin-left: auto;
     margin-top: auto;
+    padding: 4px;
+    color: var(--RESIZER-FG-COLOR);
     cursor: nwse-resize;
-    background: var(--RESIZER-BG-COLOR);
-    border: var(--BUTTON-BORDER);
-    border-radius: var(--ELEMENT-BORDER-RADIUS);
-}
-.dragWindowResizer:active {
-    background: var(--RESIZER-BG-COLOR-ACTIVE);
+    line-height: 1;
 }

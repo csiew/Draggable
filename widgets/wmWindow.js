@@ -56,6 +56,7 @@ class wmWindow {
                     class="dragWindowResizer"
                     onmousedown="currentSession.moveWindow(${this.id})"
                 >
+                &#8690;
                 </div>
             </div>
             `;

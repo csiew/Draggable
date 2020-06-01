@@ -12,6 +12,7 @@ class Preferences {
             'Steel Blue': 'steelblue'
         };
         var imgs = {
+            'Abstract': './assets/Abstract.png',
             'Night Sky': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
             'Rath of the Earth': 'https://images.unsplash.com/photo-1554232682-b9ef9c92f8de?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
             'Gunung Bromo': 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80'
@@ -26,8 +27,10 @@ class Preferences {
     }
 
     setBackgroundDefault() {
-        document.body.style.backgroundImage = 'none';
         document.body.style.background = 'steelblue';
+        document.body.style.backgroundImage = `url(./assets/Abstract.png)`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundOrigin = 'center';
     }
 
     setBackgroundColor(bgColor) {

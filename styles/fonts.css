@@ -1,0 +1,123 @@
+/* STANDARD */
+@font-face {
+    font-family: Standard;
+    src: url(fonts/standard/standard-book-webfont.woff);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: Standard;
+    src: url(fonts/standard/standard-italic-webfont.woff);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: Standard;
+    src: url(fonts/standard/standard-bold-webfont.woff);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: Standard;
+    src: url(fonts/standard/standard-bold-italic-webfont.woff);
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* BESLEY */
+@font-face {
+    font-family: Besley;
+    src: url(fonts/besley/Besley-Book.otf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: Besley;
+    src: url(fonts/besley/Besley-BookItalic.otf);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: Besley;
+    src: url(fonts/besley/Besley-Bold.otf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: Besley;
+    src: url(fonts/besley/Besley-BoldItalic.otf);
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* ZAPUS SANS */
+@font-face {
+    font-family: 'Zapus Sans';
+    src: url(fonts/zapus/hinted-ZapusSans.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zapus Sans';
+    src: url(fonts/zapus/hinted-ZapusSans-Italic.ttf);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Zapus Sans';
+    src: url(fonts/zapus/hinted-ZapusSans-Bold.ttf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zapus Sans';
+    src: url(fonts/zapus/hinted-ZapusSans-BoldItalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* BERT SANS */
+@font-face {
+    font-family: 'Bert Sans';
+    src: url(fonts/bert/BertSans-5No400Rg.otf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bert Sans';
+    src: url(fonts/bert/BertSans-5No400RgIt.otf);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Bert Sans';
+    src: url(fonts/bert/BertSans-5No700Bd.otf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bert Sans';
+    src: url(fonts/bert/BertSans-5No700BdIt.otf);
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* PROXIMA NOVA */
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url(fonts/proxima/ProximaNova-Reg-webfont.woff);
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url(fonts/proxima/ProximaNova-Sbold-webfont.woff);
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url(fonts/proxima/ProximaNova-Bold-webfont.woff);
+    font-weight: 700;
+    font-style: normal;
+}
