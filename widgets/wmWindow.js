@@ -1,7 +1,7 @@
 class wmWindow {
     constructor(
         title,
-        body,
+        content,
         allowResizable=true,
         customId=null,
         appId=null,
@@ -12,7 +12,7 @@ class wmWindow {
         this.id = customId ? customId : 'a' + uuidv4();
         this.appId = appId ? appId : uuidv4();
         this.title = title;
-        this.body = body;
+        this.content = new wmWindowContent(content, this.id);
         this.allowResizable = allowResizable;
         this.focused = focused;
         this.zoomed = zoomed;
@@ -42,12 +42,7 @@ class wmWindow {
                         <button onmouseup="currentSession.zoomWindow('${this.id}')" ${this.allowResizable === true ? '' : 'disabled'}>&plus;</button>
                     </div>
                 </div>
-                <div
-                    id="${this.id}-content"
-                    class="dragWindowContent"
-                >
-                    ${this.body}
-                </div>
+                ${this.content.render()}
         `;
         if (this.allowResizable === true) {
             windowGen += `

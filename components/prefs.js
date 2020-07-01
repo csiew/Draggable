@@ -7,6 +7,7 @@ class Preferences {
         this.backgrounds['img'] = new Object();
 
         var colors = {
+            'Dim Gray': 'dimgray',
             'Dark Slate Blue': 'darkslateblue',
             'Dark Cyan': 'darkcyan',
             'Steel Blue': 'steelblue'
@@ -28,7 +29,7 @@ class Preferences {
 
     setBackgroundDefault() {
         document.body.style.background = 'steelblue';
-        document.body.style.backgroundImage = `url(./assets/Abstract.png)`;
+        document.body.style.backgroundImage = `none`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundOrigin = 'center';
     }

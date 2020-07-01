@@ -3,49 +3,52 @@
 
     --ELEMENT-FG-COLOR: black;
     --ELEMENT-FG-COLOR-DISABLED: dimgray;
-    --ELEMENT-BG-COLOR: #f3f3f3;
+    --ELEMENT-BG-COLOR: white;
     --ELEMENT-OUTLINE: none;
-    --ELEMENT-SHADOW: 0px 2px 8px rgba(0,0,0,0.5);
+    --ELEMENT-SHADOW: 0px 2px 4px rgba(0,0,0,0.75);
     --ELEMENT-BORDER: 1px solid #a0a0a0;
     --ELEMENT-BORDER-RADIUS: 5px;
+
+    --TASKBAR-BG-COLOR: white;
 
     --DOCUMENT-FG-COLOR: black;
     --DOCUMENT-BG-COLOR: white;
 
     --BUTTON-FG-COLOR: black;
-    --BUTTON-BG-COLOR: linear-gradient(to bottom, white, #f9f9f9, #f3f3f3, #e3e3e3);
-    --BUTTON-BG-COLOR-HOVER: linear-gradient(to bottom, #f9f9f9, #e3e3e3);
-    --BUTTON-BG-COLOR-ACTIVE: #d3d3d3;
-    --BUTTON-BORDER: var(--ELEMENT-BORDER);
+    --BUTTON-BG-COLOR: lightgray;
+    --BUTTON-BG-COLOR-HOVER: lightgray;
+    --BUTTON-BG-COLOR-ACTIVE: darkgray;
+    --BUTTON-BORDER: none;
     --BUTTON-BORDER-RADIUS: 5px;
-    --BUTTON-SHADOW: 0px 0px 8px rgba(0,0,0,0.25);
+    --BUTTON-SHADOW: none;
 
-    --TEXTFIELD-BORDER: 3px solid #a3a3a3;
-    --TEXTFIELD-BORDER-FOCUS: 3px solid royalblue;
-    --TEXTFIELD-SHADOW: 0px 2px 2px rgba(0,0,0,0.25) inset;
+    --TEXTFIELD-BORDER: 1px solid lightgray;
+    --TEXTFIELD-BORDER-FOCUS: 1px solid darkgray;
+    --TEXTFIELD-SHADOW: none;
 
     --WINDOW-BG-COLOR: var(--ELEMENT-BG-COLOR);
     --WINDOW-CONTENT-FG-COLOR: black;
     --WINDOW-CONTENT-BG-COLOR: var(--ELEMENT-BG-COLOR);
     --WINDOW-BORDER: none;
-    --WINDOW-SHADOW: 0px 4px 8px rgba(0,0,0,0.5);
+    --WINDOW-SHADOW: 0px 2px 8px rgba(0,0,0,0.75);
 
     --WINDOW-CONTROL-FG-COLOR: black;
-    --WINDOW-CONTROL-BG-COLOR: white;
-    --WINDOW-CONTROL-BG-COLOR-HOVER: #f3f3f3;
+    --WINDOW-CONTROL-BG-COLOR: lightgray;
+    --WINDOW-CONTROL-BG-COLOR-HOVER: darkgray;
     --WINDOW-CONTROL-BG-COLOR-ACTIVE: gray;
-    --WINDOW-CONTROL-BORDER-RADIUS: 16px;
-    --WINDOW-CONTROL-SHADOW: 0px 2px 2px rgba(0,0,0,0.125);
+    --WINDOW-CONTROL-BORDER: none;
+    --WINDOW-CONTROL-BORDER-RADIUS: 5px;
+    --WINDOW-CONTROL-SHADOW: none;
 
-    --HEADER-FG-COLOR: white;
-    --HEADER-BG-COLOR-FOCUSED: linear-gradient(to bottom, deepskyblue, royalblue);
-    --HEADER-BG-COLOR-UNFOCUSED: linear-gradient(to bottom, lightgray, gray);
+    --HEADER-FG-COLOR: black;
+    --HEADER-BG-COLOR-FOCUSED: lightgray;
+    --HEADER-BG-COLOR-UNFOCUSED: white;
 
     --MENULIST-FG-COLOR: black;
     --MENULIST-FG-COLOR-HOVER: white;
     --MENULIST-BG-COLOR: var(--ELEMENT-BG-COLOR);
-    --MENULIST-BG-COLOR-HOVER: linear-gradient(to bottom, deepskyblue, royalblue);
-    --MENULIST-BG-COLOR-ACTIVE: #5e5e5e;
+    --MENULIST-BG-COLOR-HOVER: royalblue;
+    --MENULIST-BG-COLOR-ACTIVE: royalblue;
 
     --BORDER-COLOR-DARK: #a0a0a0;
     --BORDER-COLOR-LIGHT: #f5f5f5;
@@ -54,8 +57,9 @@
     --BORDER-LIGHT: 1px solid var(--BORDER-COLOR-LIGHT);
 
     --RESIZER-FG-COLOR: gray;
-    --RESIZER-BG-COLOR: white;
-    --RESIZER-BG-COLOR-ACTIVE: gray;
+    --RESIZER-FG-COLOR-ACTIVE: black;
+    --RESIZER-BG-COLOR: none;
+    --RESIZER-BG-COLOR-ACTIVE: white;
 
     --WINDOW-MIN-WIDTH: '180px';
     --WINDOW-MIN-HEIGHT: '120px';
@@ -65,10 +69,10 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Proxima Nova', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: var(--BODY-FONT-SIZE);
     background: steelblue;
-    background-image: url(../assets/Abstract.png);
+    background-image: none;
     background-size: cover;
     background-origin: border-box;
     overflow: hidden;
@@ -85,8 +89,8 @@ html, body {
 
 button {
     padding: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
     color: var(--BUTTON-FG-COLOR);
     background: var(--BUTTON-BG-COLOR);
     border: var(--BUTTON-BORDER);
@@ -132,7 +136,7 @@ input[type=text]:focus {
     padding: 2px;
     box-sizing: border-box;
     color: var(--ELEMENT-FG-COLOR);
-    background: var(--ELEMENT-BG-COLOR);
+    background: var(--TASKBAR-BG-COLOR);
     border: var(--BORDER-LIGHT);
     border-right: var(--BORDER-DARK);
     border-bottom: var(--BORDER-DARK);
@@ -229,19 +233,22 @@ input[type=text]:focus {
     list-style: none;
     margin: 0;
     padding: 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 .menuList li {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     margin: 0;
-    padding: 2px;
-    padding-left: 8px;
-    padding-right: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
     color: var(--MENULIST-FG-COLOR);
     background: var(--MENULIST-BG-COLOR);
+    border-radius: var(--BUTTON-BORDER-RADIUS);
 }
 .menuList li:hover {
     color: var(--MENULIST-FG-COLOR-HOVER);
@@ -308,10 +315,11 @@ input[type=text]:focus {
 }
 .dragWindowControls button {
     padding: 4px;
-    padding-top: 1px;
-    padding-bottom: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     color: var(--WINDOW-CONTROL-FG-COLOR);
     background: var(--WINDOW-CONTROL-BG-COLOR);
+    border: var(--WINDOW-CONTROL-BORDER);
     border-radius: var(--WINDOW-CONTROL-BORDER-RADIUS);
     box-shadow: var(--WINDOW-CONTROL-SHADOW);
     line-height: 1;
@@ -353,6 +361,20 @@ input[type=text]:focus {
     margin-top: auto;
     padding: 4px;
     color: var(--RESIZER-FG-COLOR);
+    background: var(--RESIZER-BG-COLOR);
     cursor: nwse-resize;
     line-height: 1;
+}
+.dragWindowResizer:active {
+    color: var(--RESIZER-FG-COLOR-ACTIVE);
+    background: var(--RESIZER-BG-COLOR-ACTIVE);
+}
+
+.toolbarContainer {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
